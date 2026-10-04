@@ -170,23 +170,39 @@ export default function Sidebar() {
       dir="rtl"
       className={`
         fixed top-0 right-0 h-full z-40 flex flex-col
-        bg-white border-l border-gray-200 shadow-lg
+        bg-white/85 dark:bg-slate-900/85 backdrop-blur-xl
+        border-l border-slate-200/80 dark:border-slate-800/80
+        shadow-[0_4px_30px_rgba(0,0,0,0.06)] dark:shadow-[0_4px_30px_rgba(0,0,0,0.4)]
         sidebar-transition select-none
         ${sidebarOpen ? 'w-64' : 'w-16'}
       `}
     >
+      {/* Top luminous accent edge */}
+      <div
+        className="absolute top-0 inset-x-0 h-[2px]"
+        style={{
+          background: `linear-gradient(90deg, transparent, ${settings?.primaryColor || '#6366f1'}, transparent)`,
+        }}
+      />
+
       {/* Logo */}
-      <div className="flex items-center justify-between p-4 border-b border-gray-200 min-h-[64px]">
+      <div className="flex items-center justify-between p-4 border-b border-slate-200/70 dark:border-slate-800/70 min-h-[64px]">
         {sidebarOpen && (
           <div className="flex items-center gap-2.5 min-w-0 flex-1">
-            <div
-              className="w-8 h-8 rounded-lg flex items-center justify-center text-white font-bold text-sm shrink-0"
-              style={{
-                backgroundColor: settings?.primaryColor || '#6366f1',
-                color: getContrastColor(settings?.primaryColor || '#6366f1'),
-              }}
-            >
-              E
+            <div className="relative shrink-0">
+              <div
+                className="absolute inset-0 rounded-xl blur-xs opacity-60"
+                style={{ backgroundColor: settings?.primaryColor || '#6366f1' }}
+              />
+              <div
+                className="relative w-8 h-8 rounded-xl flex items-center justify-center font-black text-sm shadow-xs"
+                style={{
+                  backgroundColor: settings?.primaryColor || '#6366f1',
+                  color: getContrastColor(settings?.primaryColor || '#6366f1'),
+                }}
+              >
+                E
+              </div>
             </div>
             <span className="font-bold text-gray-900 text-sm whitespace-nowrap overflow-visible flex-1 min-w-max px-2 text-right leading-relaxed">
               {settings?.centerName || 'EduCenter Pro'}
@@ -194,19 +210,25 @@ export default function Sidebar() {
           </div>
         )}
         {!sidebarOpen && (
-          <div
-            className="w-8 h-8 rounded-lg flex items-center justify-center text-white font-bold text-sm mx-auto shrink-0"
-            style={{
-              backgroundColor: settings?.primaryColor || '#6366f1',
-              color: getContrastColor(settings?.primaryColor || '#6366f1'),
-            }}
-          >
-            E
+          <div className="relative mx-auto shrink-0">
+            <div
+              className="absolute inset-0 rounded-xl blur-xs opacity-50"
+              style={{ backgroundColor: settings?.primaryColor || '#6366f1' }}
+            />
+            <div
+              className="relative w-8 h-8 rounded-xl flex items-center justify-center font-black text-sm shadow-xs"
+              style={{
+                backgroundColor: settings?.primaryColor || '#6366f1',
+                color: getContrastColor(settings?.primaryColor || '#6366f1'),
+              }}
+            >
+              E
+            </div>
           </div>
         )}
         <button
           onClick={() => setSidebarOpen(!sidebarOpen)}
-          className="p-1 rounded-lg hover:bg-gray-100 text-gray-500 transition-colors shrink-0"
+          className="p-1.5 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 transition-colors shrink-0"
           aria-label={sidebarOpen ? 'تصغير القائمة الجانبية' : 'توسيع القائمة الجانبية'}
         >
           {sidebarOpen ? <ChevronRight size={18} /> : <ChevronLeft size={18} />}
@@ -221,7 +243,7 @@ export default function Sidebar() {
         onClickCapture={captureScroll}
         onWheel={handleUserInteraction}
         onTouchStart={handleUserInteraction}
-        className="flex-1 overflow-y-auto py-4 px-2"
+        className="flex-1 overflow-y-auto py-3 px-2 space-y-1"
       >
         {visibleItems.map(item => (
           <NavLink
@@ -230,9 +252,12 @@ export default function Sidebar() {
             end={item.path === '/'}
             onClick={captureScroll}
             className={({ isActive }) => `
-              flex items-center gap-3 px-3.5 py-2.5 rounded-xl mb-1
+              flex items-center gap-3 px-3 py-2.5 rounded-xl
               transition-all duration-200 group relative
-              ${isActive ? 'text-white shadow-md' : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'}
+              ${isActive
+                ? 'text-white shadow-md shadow-indigo-500/20 font-semibold'
+                : 'text-slate-600 dark:text-slate-300 hover:bg-slate-100/80 dark:hover:bg-slate-800/60 hover:text-slate-900 dark:hover:text-slate-100'
+              }
               ${!sidebarOpen ? 'justify-center px-0' : ''}
             `}
             style={({ isActive }) =>
@@ -244,7 +269,7 @@ export default function Sidebar() {
                 : {}
             }
           >
-            <span className="w-5 h-5 flex items-center justify-center shrink-0">
+            <span className="w-5 h-5 flex items-center justify-center shrink-0 transition-transform duration-200 group-hover:scale-110">
               <item.icon size={20} />
             </span>
             {sidebarOpen && (
@@ -256,16 +281,16 @@ export default function Sidebar() {
               debtAlert &&
               debtAlert.debtorsCount > 0 &&
               (sidebarOpen ? (
-                <span className="ms-auto shrink-0 bg-red-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full min-w-[20px] text-center">
+                <span className="ms-auto shrink-0 bg-rose-500 text-white text-[10px] font-black px-2 py-0.5 rounded-full min-w-[20px] text-center shadow-xs">
                   {debtAlert.debtorsCount}
                 </span>
               ) : (
-                <span className="absolute top-1 left-1 w-2 h-2 bg-red-500 rounded-full" />
+                <span className="absolute top-1.5 left-1.5 w-2.5 h-2.5 bg-rose-500 rounded-full ring-2 ring-white dark:ring-slate-900" />
               ))}
             {!sidebarOpen && (
               <div
-                className="absolute right-full mr-2 bg-gray-900 text-white text-xs px-2.5 py-1.5 rounded-lg
-                opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none z-50 shadow-lg leading-normal"
+                className="absolute right-full mr-2.5 bg-slate-900/90 dark:bg-slate-800/95 backdrop-blur-md text-white text-xs font-semibold px-3 py-1.5 rounded-xl
+                opacity-0 group-hover:opacity-100 transition-all duration-200 whitespace-nowrap pointer-events-none z-50 shadow-xl border border-white/10 leading-normal"
               >
                 {item.label}
               </div>
@@ -275,17 +300,20 @@ export default function Sidebar() {
       </nav>
 
       {/* User info & Logout */}
-      <div className="border-t border-gray-200 p-3">
+      <div className="border-t border-slate-200/70 dark:border-slate-800/70 p-3">
         {sidebarOpen ? (
-          <div className="flex items-center gap-3">
-            <div
-              className="w-9 h-9 rounded-full flex items-center justify-center text-white font-bold text-sm shrink-0"
-              style={{
-                backgroundColor: settings?.primaryColor || '#6366f1',
-                color: getContrastColor(settings?.primaryColor || '#6366f1'),
-              }}
-            >
-              {user?.username?.[0]?.toUpperCase() || 'A'}
+          <div className="flex items-center gap-3 p-1.5 rounded-2xl bg-slate-50/70 dark:bg-slate-800/40 border border-slate-200/50 dark:border-slate-700/50">
+            <div className="relative shrink-0">
+              <div
+                className="w-9 h-9 rounded-xl flex items-center justify-center font-bold text-sm shadow-xs"
+                style={{
+                  backgroundColor: settings?.primaryColor || '#6366f1',
+                  color: getContrastColor(settings?.primaryColor || '#6366f1'),
+                }}
+              >
+                {user?.username?.[0]?.toUpperCase() || 'A'}
+              </div>
+              <span className="absolute -bottom-0.5 -left-0.5 w-2.5 h-2.5 bg-emerald-500 rounded-full ring-2 ring-white dark:ring-slate-900" />
             </div>
             <div className="flex-1 min-w-max px-2 overflow-visible">
               <p className="text-sm font-semibold text-gray-900 whitespace-nowrap overflow-visible text-right leading-relaxed">
@@ -297,7 +325,7 @@ export default function Sidebar() {
             </div>
             <button
               onClick={logout}
-              className="p-1.5 rounded-lg hover:bg-red-50 text-red-500 transition-colors shrink-0"
+              className="p-2 rounded-xl hover:bg-rose-50 dark:hover:bg-rose-950/40 text-rose-500 transition-colors shrink-0"
               title="تسجيل الخروج"
             >
               <LogOut size={16} />
@@ -306,7 +334,7 @@ export default function Sidebar() {
         ) : (
           <button
             onClick={logout}
-            className="w-full flex justify-center p-2 rounded-lg hover:bg-red-50 text-red-500 transition-colors shrink-0"
+            className="w-full flex justify-center p-2 rounded-xl hover:bg-rose-50 dark:hover:bg-rose-950/40 text-rose-500 transition-colors shrink-0"
             title="تسجيل الخروج"
           >
             <LogOut size={18} />

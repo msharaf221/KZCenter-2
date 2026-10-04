@@ -230,15 +230,21 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50 flex items-center justify-center p-4" dir="rtl">
-      <div className={`w-full transition-all duration-300 ${viewMode === 'portal' ? 'max-w-4xl py-6' : 'max-w-md'}`}>
+    <div className="min-h-screen relative flex items-center justify-center p-4 overflow-hidden bg-slate-50 dark:bg-[#070b14]" dir="rtl">
+      {/* Ambient background glow orbs */}
+      <div className="fixed top-1/4 right-1/4 w-96 h-96 rounded-full bg-indigo-500/15 dark:bg-indigo-500/20 blur-[120px] pointer-events-none" />
+      <div className="fixed bottom-1/4 left-1/4 w-96 h-96 rounded-full bg-purple-500/15 dark:bg-purple-500/20 blur-[120px] pointer-events-none" />
+
+      <div className={`w-full relative z-10 transition-all duration-300 ${viewMode === 'portal' ? 'max-w-4xl py-6' : 'max-w-md'}`}>
         {/* شريط التبديل بين دخول الموظفين وبوابة الطلاب */}
-        <div className="flex bg-white/90 p-1.5 rounded-2xl mb-6 max-w-sm mx-auto shadow-sm border border-indigo-100 no-print">
+        <div className="flex bg-white/80 dark:bg-slate-900/80 backdrop-blur-md p-1.5 rounded-2xl mb-8 max-w-sm mx-auto shadow-sm border border-slate-200/80 dark:border-slate-800/80 no-print">
           <button
             type="button"
             onClick={() => setViewMode('login')}
-            className={`flex-1 py-2 text-xs font-bold rounded-xl transition-all cursor-pointer ${
-              viewMode === 'login' ? 'bg-indigo-600 text-white shadow-xs' : 'text-gray-500 hover:text-gray-800'
+            className={`flex-1 py-2.5 text-xs font-bold rounded-xl transition-all cursor-pointer ${
+              viewMode === 'login'
+                ? 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-md shadow-indigo-500/25'
+                : 'text-slate-500 hover:text-slate-900 dark:hover:text-slate-100'
             }`}
           >
             🔐 دخول الموظفين
@@ -246,8 +252,10 @@ export default function LoginPage() {
           <button
             type="button"
             onClick={() => setViewMode('portal')}
-            className={`flex-1 py-2 text-xs font-bold rounded-xl transition-all cursor-pointer ${
-              viewMode === 'portal' ? 'bg-indigo-600 text-white shadow-xs' : 'text-gray-500 hover:text-gray-800'
+            className={`flex-1 py-2.5 text-xs font-bold rounded-xl transition-all cursor-pointer ${
+              viewMode === 'portal'
+                ? 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-md shadow-indigo-500/25'
+                : 'text-slate-500 hover:text-slate-900 dark:hover:text-slate-100'
             }`}
           >
             🎓 استعلام الطالب وولي الأمر
@@ -260,29 +268,36 @@ export default function LoginPage() {
           <>
             {/* Logo */}
             <div className="text-center mb-8">
-              <div className="w-20 h-20 bg-indigo-600 rounded-3xl flex items-center justify-center mx-auto mb-4 shadow-lg shadow-indigo-200">
-                <span className="text-4xl">🎓</span>
+              <div className="relative inline-flex items-center justify-center mb-4">
+                <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-indigo-500 to-purple-500 blur-lg opacity-40 animate-pulse" />
+                <div className="relative w-20 h-20 bg-gradient-to-br from-indigo-600 to-purple-700 rounded-3xl flex items-center justify-center shadow-xl shadow-indigo-500/30">
+                  <span className="text-4xl select-none">🎓</span>
+                </div>
               </div>
-              <h1 className="text-3xl font-black text-gray-900">EduCenter Pro</h1>
-              <p className="text-gray-500 mt-1">نظام إدارة المركز التعليمي</p>
+              <h1 className="text-3xl font-black tracking-tight text-slate-900 dark:text-slate-100">
+                <span className="bg-gradient-to-r from-indigo-600 via-purple-600 to-indigo-600 dark:from-indigo-400 dark:via-purple-400 dark:to-indigo-400 bg-clip-text text-transparent">
+                  EduCenter Pro
+                </span>
+              </h1>
+              <p className="text-slate-500 dark:text-slate-400 text-sm mt-1.5 font-medium">نظام إدارة المركز التعليمي الذكي</p>
             </div>
 
             {/* Form Card */}
-            <div className="bg-white rounded-3xl shadow-xl p-8 border border-gray-100">
-              <h2 className="text-xl font-bold text-gray-900 mb-6">تسجيل الدخول</h2>
+            <div className="glow-card bg-white/90 dark:bg-slate-900/90 backdrop-blur-2xl rounded-3xl shadow-2xl p-7 sm:p-8 border border-slate-200/80 dark:border-slate-800/80">
+              <h2 className="text-xl font-bold text-slate-900 dark:text-slate-100 mb-6">تسجيل الدخول</h2>
 
               <form onSubmit={handleSubmit} className="space-y-5">
                 {/* Username */}
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">اسم المستخدم</label>
+                  <label className="block text-xs font-bold text-slate-600 dark:text-slate-300 mb-2">اسم المستخدم</label>
                   <div className="relative">
-                    <User size={18} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                    <User size={18} className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
                     <input
                       type="text"
                       value={username}
                       onChange={e => setUsername(e.target.value)}
                       placeholder="أدخل اسم المستخدم"
-                      className="w-full pr-10 pl-4 py-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
+                      className="w-full pr-11 pl-4 py-3 bg-slate-50/80 dark:bg-slate-800/60 border border-slate-200/80 dark:border-slate-700/80 rounded-2xl text-sm text-slate-900 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-500 focus:bg-white dark:focus:bg-slate-900 transition-all"
                       autoComplete="username"
                     />
                   </div>
@@ -290,21 +305,21 @@ export default function LoginPage() {
 
                 {/* Password */}
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">كلمة المرور</label>
+                  <label className="block text-xs font-bold text-slate-600 dark:text-slate-300 mb-2">كلمة المرور</label>
                   <div className="relative">
-                    <Lock size={18} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                    <Lock size={18} className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
                     <input
                       type={showPassword ? 'text' : 'password'}
                       value={password}
                       onChange={e => setPassword(e.target.value)}
                       placeholder="أدخل كلمة المرور"
-                      className="w-full pr-10 pl-10 py-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
+                      className="w-full pr-11 pl-11 py-3 bg-slate-50/80 dark:bg-slate-800/60 border border-slate-200/80 dark:border-slate-700/80 rounded-2xl text-sm text-slate-900 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-500 focus:bg-white dark:focus:bg-slate-900 transition-all"
                       autoComplete="current-password"
                     />
                     <button
                       type="button"
                       onClick={() => setShowPassword(!showPassword)}
-                      className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                      className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 transition-colors"
                     >
                       {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                     </button>
@@ -313,18 +328,18 @@ export default function LoginPage() {
 
                 {/* Rate limit warning */}
                 {rateLimitInfo && rateLimitInfo.remainingAttempts <= 2 && rateLimitInfo.remainingAttempts > 0 && (
-                  <div className="p-3 bg-yellow-50 rounded-xl border border-yellow-100">
-                    <p className="text-xs text-yellow-700 flex items-center gap-1">
-                      <AlertTriangle size={14} />
+                  <div className="p-3.5 bg-amber-500/10 rounded-2xl border border-amber-500/20 text-amber-700 dark:text-amber-300">
+                    <p className="text-xs font-semibold flex items-center gap-1.5">
+                      <AlertTriangle size={15} />
                       متبقي {rateLimitInfo.remainingAttempts} محاولات قبل الحظر المؤقت
                     </p>
                   </div>
                 )}
 
                 {rateLimitInfo && rateLimitInfo.remainingAttempts === 0 && (
-                  <div className="p-3 bg-red-50 rounded-xl border border-red-100">
-                    <p className="text-xs text-red-700 flex items-center gap-1">
-                      <AlertTriangle size={14} />
+                  <div className="p-3.5 bg-rose-500/10 rounded-2xl border border-rose-500/20 text-rose-700 dark:text-rose-300">
+                    <p className="text-xs font-semibold flex items-center gap-1.5">
+                      <AlertTriangle size={15} />
                       تم حظر المحاولات. حاول مرة أخرى بعد بضع دقائق.
                     </p>
                   </div>
@@ -333,8 +348,8 @@ export default function LoginPage() {
                 <button
                   type="submit"
                   disabled={loading || (rateLimitInfo?.remainingAttempts === 0)}
-                  className="w-full py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-bold text-sm transition-all
-                    disabled:opacity-60 disabled:cursor-not-allowed shadow-md shadow-indigo-200"
+                  className="w-full py-3.5 bg-gradient-to-r from-indigo-600 via-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white rounded-2xl font-bold text-sm transition-all duration-200
+                    disabled:opacity-60 disabled:cursor-not-allowed shadow-lg shadow-indigo-500/25 active:scale-[0.98] cursor-pointer"
                 >
                   {loading ? (
                     <span className="flex items-center justify-center gap-2">
@@ -346,11 +361,11 @@ export default function LoginPage() {
               </form>
 
               {import.meta.env.DEV && (
-                <div className="mt-6 p-4 bg-gray-50 rounded-xl">
-                  <p className="text-xs text-gray-500 font-medium mb-1">بيانات الدخول الافتراضية:</p>
-                  <p className="text-xs text-gray-600">المستخدم: <strong>admin</strong></p>
-                  <p className="text-xs text-gray-600">كلمة المرور: <strong>admin123</strong></p>
-                  <p className="text-xs text-orange-600 mt-1">⚠️ سيتم طلب تغييرها فور الدخول</p>
+                <div className="mt-6 p-4 bg-slate-50/80 dark:bg-slate-800/40 rounded-2xl border border-slate-200/60 dark:border-slate-700/60">
+                  <p className="text-xs text-slate-500 dark:text-slate-400 font-bold mb-1.5">بيانات الدخول الافتراضية:</p>
+                  <p className="text-xs text-slate-600 dark:text-slate-300">المستخدم: <strong className="text-slate-900 dark:text-slate-100 font-mono">admin</strong></p>
+                  <p className="text-xs text-slate-600 dark:text-slate-300">كلمة المرور: <strong className="text-slate-900 dark:text-slate-100 font-mono">admin123</strong></p>
+                  <p className="text-xs text-amber-600 dark:text-amber-400 font-medium mt-1.5">⚠️ سيتم طلب تغييرها فور الدخول</p>
                 </div>
               )}
               {/* Reset Database Button (dev only - dangerous) */}
@@ -359,7 +374,7 @@ export default function LoginPage() {
                   <button
                     onClick={handleResetDatabase}
                     disabled={resetting}
-                    className="text-xs text-gray-400 hover:text-red-500 flex items-center justify-center gap-1 mx-auto transition-colors"
+                    className="text-xs text-slate-400 hover:text-rose-500 flex items-center justify-center gap-1.5 mx-auto transition-colors cursor-pointer"
                   >
                     <RefreshCw size={12} className={resetting ? 'animate-spin' : ''} />
                     {resetting ? 'جاري إعادة التعيين...' : 'إعادة تعيين قاعدة البيانات'}

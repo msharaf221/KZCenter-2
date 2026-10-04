@@ -1,4 +1,5 @@
 import dayjs from 'dayjs';
+import { CalendarCheck, CreditCard, UserPlus } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Layout from '../components/layout/Layout';
@@ -126,6 +127,60 @@ export default function DashboardPage() {
   return (
     <Layout title="لوحة التحكم">
       <div className="space-y-6">
+        {/* Futuristic Hero Banner */}
+        <div className="relative overflow-hidden rounded-3xl p-6 sm:p-8 bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 text-white shadow-2xl border border-indigo-500/20 backdrop-blur-xl">
+          {/* Subtle background glow streaks */}
+          <div className="absolute top-0 right-0 w-96 h-96 bg-indigo-500/15 rounded-full blur-3xl pointer-events-none" />
+          <div className="absolute bottom-0 left-0 w-80 h-80 bg-purple-500/15 rounded-full blur-3xl pointer-events-none" />
+
+          <div className="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+            <div className="space-y-2">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-500/20 border border-indigo-400/30 text-indigo-300 text-xs font-bold tracking-wide">
+                <span className="w-2 h-2 rounded-full bg-emerald-400 glow-pulse" />
+                <span>{settings?.centerName || 'EduCenter Pro'} • نظام متصل ومحدث</span>
+              </div>
+              <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-white flex items-center gap-2">
+                <span>أهلاً بك، {user?.username || 'المسؤول'}</span>
+                <span className="text-2xl select-none">👋</span>
+              </h1>
+              <p className="text-slate-300 text-xs sm:text-sm font-medium">
+                {dayjs().format('dddd، D MMMM YYYY')} — نظرة شاملة ولحظية على أداء المركز والعمليات اليومية.
+              </p>
+            </div>
+
+            {/* Quick action buttons */}
+            <div className="flex flex-wrap items-center gap-2 sm:gap-3">
+              {can('payments', 'create') && (
+                <button
+                  onClick={() => navigate('/payments')}
+                  className="inline-flex items-center gap-2 px-4 py-2.5 rounded-2xl bg-emerald-500/90 hover:bg-emerald-500 text-white font-bold text-xs shadow-lg shadow-emerald-500/25 transition-all hover:scale-105 active:scale-95 cursor-pointer"
+                >
+                  <CreditCard size={15} />
+                  <span>تسجيل دفعة</span>
+                </button>
+              )}
+              {can('students', 'create') && (
+                <button
+                  onClick={() => navigate('/students')}
+                  className="inline-flex items-center gap-2 px-4 py-2.5 rounded-2xl bg-indigo-600/90 hover:bg-indigo-600 text-white font-bold text-xs shadow-lg shadow-indigo-600/25 transition-all hover:scale-105 active:scale-95 cursor-pointer"
+                >
+                  <UserPlus size={15} />
+                  <span>إضافة طالب</span>
+                </button>
+              )}
+              {can('attendance', 'create') && (
+                <button
+                  onClick={() => navigate('/attendance')}
+                  className="inline-flex items-center gap-2 px-4 py-2.5 rounded-2xl bg-white/10 hover:bg-white/20 text-white font-bold text-xs border border-white/15 transition-all hover:scale-105 active:scale-95 cursor-pointer backdrop-blur-md"
+                >
+                  <CalendarCheck size={15} />
+                  <span>تسجيل الحضور</span>
+                </button>
+              )}
+            </div>
+          </div>
+        </div>
+
         {/* Stat Cards */}
         <DashboardStatsGrid
           stats={stats}

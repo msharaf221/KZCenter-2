@@ -32,23 +32,24 @@ export default function Pagination({ currentPage, totalPages, onPageChange, tota
   }
 
   return (
-    <div className="flex items-center justify-between px-4 py-3 border-t border-gray-100">
-      <p className="text-sm text-gray-500">
-        عرض {start} - {end} من أصل {totalItems} سجل
+    <div className="flex flex-col sm:flex-row items-center justify-between gap-3 px-4 py-3.5 border-t border-slate-200/70 dark:border-slate-800/70">
+      <p className="text-xs sm:text-sm font-medium text-slate-500 dark:text-slate-400">
+        عرض <span className="font-bold text-slate-800 dark:text-slate-200 font-mono">{start}</span> - <span className="font-bold text-slate-800 dark:text-slate-200 font-mono">{end}</span> من أصل <span className="font-bold text-slate-800 dark:text-slate-200 font-mono">{totalItems}</span> سجل
       </p>
-      <div className="flex items-center gap-1">
+      <div className="flex items-center gap-1.5">
         <button
           onClick={() => onPageChange(currentPage - 1)}
           disabled={currentPage === 1}
-          className="p-2 rounded-lg hover:bg-gray-100 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+          className="p-2 rounded-xl border border-slate-200/60 dark:border-slate-700/60 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300 disabled:opacity-30 disabled:cursor-not-allowed transition-all cursor-pointer"
+          aria-label="الصفحة السابقة"
         >
           <ChevronRight size={16} />
         </button>
 
         {startPage > 1 && (
           <>
-            <button onClick={() => onPageChange(1)} className="px-3 py-1.5 rounded-lg text-sm hover:bg-gray-100">1</button>
-            {startPage > 2 && <span className="text-gray-400">...</span>}
+            <button onClick={() => onPageChange(1)} className="px-3 py-1.5 rounded-xl text-xs sm:text-sm font-semibold hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 transition-colors cursor-pointer">1</button>
+            {startPage > 2 && <span className="text-slate-400 px-1">…</span>}
           </>
         )}
 
@@ -56,10 +57,10 @@ export default function Pagination({ currentPage, totalPages, onPageChange, tota
           <button
             key={page}
             onClick={() => onPageChange(page)}
-            className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
+            className={`px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer ${
               page === currentPage
-                ? 'text-white'
-                : 'hover:bg-gray-100 text-gray-700'
+                ? 'shadow-md shadow-indigo-500/20'
+                : 'hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300'
             }`}
             style={page === currentPage ? { backgroundColor: primaryColor, color: getContrastColor(primaryColor) } : {}}
           >
@@ -69,15 +70,16 @@ export default function Pagination({ currentPage, totalPages, onPageChange, tota
 
         {endPage < totalPages && (
           <>
-            {endPage < totalPages - 1 && <span className="text-gray-400">...</span>}
-            <button onClick={() => onPageChange(totalPages)} className="px-3 py-1.5 rounded-lg text-sm hover:bg-gray-100">{totalPages}</button>
+            {endPage < totalPages - 1 && <span className="text-slate-400 px-1">…</span>}
+            <button onClick={() => onPageChange(totalPages)} className="px-3 py-1.5 rounded-xl text-xs sm:text-sm font-semibold hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 transition-colors cursor-pointer">{totalPages}</button>
           </>
         )}
 
         <button
           onClick={() => onPageChange(currentPage + 1)}
           disabled={currentPage === totalPages}
-          className="p-2 rounded-lg hover:bg-gray-100 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+          className="p-2 rounded-xl border border-slate-200/60 dark:border-slate-700/60 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300 disabled:opacity-30 disabled:cursor-not-allowed transition-all cursor-pointer"
+          aria-label="الصفحة التالية"
         >
           <ChevronLeft size={16} />
         </button>
