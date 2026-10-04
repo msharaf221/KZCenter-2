@@ -130,43 +130,44 @@ export default function CoursesPage() {
   return (
     <Layout title="إدارة الكورسات">
       <div className="space-y-5">
-        <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 flex items-center gap-3">
-          <div className="flex-1 relative">
-            <Search size={16} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400" />
+        {/* Toolbar */}
+        <div className="glass-panel rounded-2xl p-4 sm:p-5 relative border border-slate-200/80 dark:border-white/10 shadow-sm flex flex-wrap items-center gap-3">
+          <div className="absolute top-0 inset-x-0 h-[1px] bg-gradient-to-r from-transparent via-cyan-400/40 to-transparent pointer-events-none" />
+          <div className="flex-1 min-w-48 relative">
+            <Search size={16} className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500 pointer-events-none" />
             <input type="text" value={search} onChange={e => setSearch(e.target.value)}
               placeholder="بحث بالاسم..."
-              className="w-full pr-9 pl-3 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+              className="w-full pr-10 pl-3.5 py-2.5 border border-slate-200 dark:border-white/10 rounded-xl text-sm bg-white/80 dark:bg-[#070b14]/90 text-slate-800 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-cyan-500/30 focus:border-cyan-400" />
           </div>
           <button onClick={() => setShowSubjectsModal(true)}
             title="إدارة وإضافة وتعديل المواد الدراسية"
-            className="flex items-center gap-2 px-4 py-2.5 border border-indigo-200 bg-indigo-50/70 hover:bg-indigo-100 text-indigo-700 rounded-xl text-sm font-semibold transition-colors">
+            className="flex items-center gap-2 px-4 py-2.5 border border-indigo-500/20 bg-indigo-500/10 hover:bg-indigo-500/20 text-indigo-600 dark:text-cyan-400 rounded-xl text-sm font-bold transition-all cursor-pointer">
             <BookOpen size={16} />
             <span>إدارة المواد</span>
-            <span className="text-[11px] bg-indigo-200/80 text-indigo-800 px-1.5 py-0.5 rounded-full font-bold">
+            <span className="text-[11px] bg-indigo-500/20 text-indigo-700 dark:text-cyan-300 px-2 py-0.5 rounded-full font-bold">
               {getAllSubjects(settings?.customSubjects).length}
             </span>
           </button>
           <button onClick={handleSyncSubjects} disabled={syncing}
             title="يربط كل كورس ومجموعة ومدرس بمادته لأغراض التصنيف والتقارير دون تعديل الأسعار"
-            className="flex items-center gap-2 px-4 py-2.5 border border-gray-200 rounded-xl text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50">
+            className="flex items-center gap-2 px-4 py-2.5 border border-slate-200 dark:border-white/10 rounded-xl text-sm font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-100/50 dark:hover:bg-white/5 disabled:opacity-50 cursor-pointer">
             <Wand2 size={16} /> {syncing ? 'جاري الظبط…' : 'ظبط تصنيف المواد'}
           </button>
           {canWrite && (
             <button onClick={openAdd}
-              className="flex items-center gap-2 px-4 py-2.5 text-white rounded-xl text-sm font-medium"
-              style={{ backgroundColor: settings?.primaryColor || '#6366f1', color: getContrastColor(settings?.primaryColor || '#6366f1') }}>
+              className="flex items-center gap-2 px-5 py-2.5 text-white rounded-xl text-sm font-bold shadow-lg shadow-cyan-500/20 hover:scale-105 active:scale-95 transition-all cursor-pointer bg-gradient-to-r from-cyan-600 to-indigo-600 hover:from-cyan-500 hover:to-indigo-500">
               <Plus size={16} /> إضافة كورس
             </button>
           )}
         </div>
 
         {syncReport && (
-          <div className="text-xs text-gray-600 bg-emerald-50 border border-emerald-100 rounded-xl px-4 py-3 space-y-1">
-            <div>
+          <div className="text-xs text-emerald-700 dark:text-emerald-300 bg-emerald-500/10 border border-emerald-500/20 rounded-2xl p-4 space-y-1">
+            <div className="font-bold">
               تم تصنيف المواد: {syncReport.coursesCreated} كورس جديد · {syncReport.coursesLinked} اترابط بمادته — مجموعات: {syncReport.groupsLinked} · مدرسين: {syncReport.teachersLinked}
             </div>
             {syncReport.coursesUnmatched.length > 0 && (
-              <div className="text-amber-800">
+              <div className="text-amber-600 dark:text-amber-400 font-medium">
                 محتاج ربط يدوي ({syncReport.coursesUnmatched.length}): {syncReport.coursesUnmatched.slice(0, 8).join('، ')}
               </div>
             )}
@@ -174,66 +175,78 @@ export default function CoursesPage() {
         )}
 
         {loading ? (
-          <div className="flex justify-center py-12"><div className="animate-spin w-8 h-8 border-4 border-indigo-500 border-t-transparent rounded-full" /></div>
+          <div className="flex justify-center py-12"><div className="animate-spin w-8 h-8 border-4 border-cyan-500 border-t-transparent rounded-full" /></div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {courses.map(course => (
-              <div key={course.id} className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden hover:shadow-md transition-shadow">
-                <div className="h-2" style={{ backgroundColor: course.color }} />
+              <div key={course.id} className="glow-card relative rounded-2xl bg-white/95 dark:bg-[#0c1324]/90 backdrop-blur-xl border border-slate-200/80 dark:border-white/10 shadow-sm overflow-hidden transition-all duration-300">
+                <div className="h-1.5 w-full" style={{ backgroundColor: course.color || '#6366f1' }} />
                 <div className="p-5">
-                  <div className="flex items-start justify-between mb-3">
+                  <div className="flex items-start justify-between mb-3.5">
                     <div className="flex items-center gap-3">
-                      <span className="text-3xl">{course.icon}</span>
+                      <span className="text-3xl p-2 rounded-2xl bg-slate-100/80 dark:bg-white/5 border border-slate-200/50 dark:border-white/5">{course.icon}</span>
                       <div>
-                        <h3 className="font-bold text-gray-900">{course.name}</h3>
-                        <div className="flex flex-wrap items-center gap-1 mt-0.5">
-                          <span className="text-xs bg-gray-100 text-gray-600 px-2 py-0.5 rounded-full">{course.category}</span>
+                        <h3 className="font-bold text-slate-900 dark:text-white text-base tracking-tight">{course.name}</h3>
+                        <div className="flex flex-wrap items-center gap-1.5 mt-1">
+                          <span className="text-[11px] font-bold bg-slate-100 dark:bg-white/10 text-slate-600 dark:text-slate-300 px-2 py-0.5 rounded-full">{course.category}</span>
                           {course.subjectId && getSubject(course.subjectId, settings?.customSubjects) ? (
-                            <span className="text-xs px-2 py-0.5 rounded-full text-white"
+                            <span className="text-[11px] font-bold px-2 py-0.5 rounded-full text-white shadow-sm"
                               style={{ backgroundColor: getSubject(course.subjectId, settings?.customSubjects)?.color || '#6366f1' }}>
                               {getSubject(course.subjectId, settings?.customSubjects)?.icon} {getSubject(course.subjectId, settings?.customSubjects)?.name}
                             </span>
                           ) : (
-                            <span className="text-xs bg-amber-50 text-amber-700 px-2 py-0.5 rounded-full">بدون مادة</span>
+                            <span className="text-[11px] font-bold bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20 px-2 py-0.5 rounded-full">بدون مادة</span>
                           )}
                         </div>
                       </div>
                     </div>
                     <div className="flex gap-1">
-                      {canWrite && <button onClick={() => openEdit(course)} className="p-1.5 rounded-lg hover:bg-yellow-50 text-yellow-600"><Edit2 size={14} /></button>}
-                      {canDelete && <button onClick={() => setDeleteId(course.id)} className="p-1.5 rounded-lg hover:bg-red-50 text-red-600"><Trash2 size={14} /></button>}
+                      {canWrite && (
+                        <button onClick={() => openEdit(course)}
+                          className="p-2 rounded-xl bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20 hover:bg-amber-500/20 transition-all cursor-pointer">
+                          <Edit2 size={14} />
+                        </button>
+                      )}
+                      {canDelete && (
+                        <button onClick={() => setDeleteId(course.id)}
+                          className="p-2 rounded-xl bg-rose-500/10 text-rose-600 dark:text-rose-400 border border-rose-500/20 hover:bg-rose-500/20 transition-all cursor-pointer">
+                          <Trash2 size={14} />
+                        </button>
+                      )}
                     </div>
                   </div>
-                  {course.description && <p className="text-xs text-gray-500 mb-3 line-clamp-2">{course.description}</p>}
-                  <div className="grid grid-cols-3 gap-2 mb-3">
-                    <div className="text-center p-2 bg-gray-50 rounded-lg">
-                      <p className="text-base font-bold text-gray-900">{groupCounts[course.id] || 0}</p>
-                      <p className="text-xs text-gray-500">مجموعة</p>
+                  {course.description && <p className="text-xs text-slate-500 dark:text-slate-400 mb-3.5 line-clamp-2">{course.description}</p>}
+                  <div className="grid grid-cols-3 gap-2 mb-3.5">
+                    <div className="text-center p-2.5 bg-slate-50/70 dark:bg-[#070b14]/70 border border-slate-200/50 dark:border-white/5 rounded-xl">
+                      <p className="text-base font-black text-slate-900 dark:text-slate-100 font-mono">{groupCounts[course.id] || 0}</p>
+                      <p className="text-[11px] font-bold text-slate-400 dark:text-slate-500 mt-0.5">مجموعة</p>
                     </div>
-                    <div className="text-center p-2 bg-gray-50 rounded-lg">
-                      <p className="text-base font-bold text-gray-900">{studentCounts[course.id] || 0}</p>
-                      <p className="text-xs text-gray-500">طالب</p>
+                    <div className="text-center p-2.5 bg-slate-50/70 dark:bg-[#070b14]/70 border border-slate-200/50 dark:border-white/5 rounded-xl">
+                      <p className="text-base font-black text-slate-900 dark:text-slate-100 font-mono">{studentCounts[course.id] || 0}</p>
+                      <p className="text-[11px] font-bold text-slate-400 dark:text-slate-500 mt-0.5">طالب</p>
                     </div>
-                    <div className="text-center p-2 bg-gray-50 rounded-lg">
-                      <p className="text-base font-bold text-green-600">{formatCurrency(course.price, settings?.currency)}</p>
-                      <p className="text-xs text-gray-500">شهرياً</p>
+                    <div className="text-center p-2.5 bg-slate-50/70 dark:bg-[#070b14]/70 border border-slate-200/50 dark:border-white/5 rounded-xl">
+                      <p className="text-base font-black text-emerald-600 dark:text-cyan-400 font-mono">{formatCurrency(course.price, settings?.currency)}</p>
+                      <p className="text-[11px] font-bold text-slate-400 dark:text-slate-500 mt-0.5">شهرياً</p>
                     </div>
                   </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs text-gray-400">{course.category}</span>
-                    <span className="text-xs text-gray-500">{course.levels.length} مستويات</span>
+                  <div className="flex items-center justify-between text-xs text-slate-400 dark:text-slate-500">
+                    <span>{course.category}</span>
+                    <span className="font-mono">{course.levels.length} مستويات</span>
                   </div>
                   {course.levels.length > 0 && (
-                    <div className="flex flex-wrap gap-1 mt-2">
+                    <div className="flex flex-wrap gap-1 mt-2.5">
                       {course.levels.map(l => (
-                        <span key={l.id} className="text-xs bg-indigo-50 text-indigo-600 px-2 py-0.5 rounded-full">{l.name}</span>
+                        <span key={l.id} className="text-[11px] font-bold bg-indigo-500/10 text-indigo-600 dark:text-cyan-300 border border-indigo-500/20 px-2 py-0.5 rounded-lg">
+                          {l.name}
+                        </span>
                       ))}
                     </div>
                   )}
                 </div>
               </div>
             ))}
-            {courses.length === 0 && <div className="col-span-3 text-center py-12 text-gray-400">لا توجد كورسات</div>}
+            {courses.length === 0 && <div className="col-span-3 text-center py-12 text-slate-400">لا توجد كورسات</div>}
           </div>
         )}
       </div>

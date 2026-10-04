@@ -130,29 +130,30 @@ export default function GroupsPage() {
   return (
     <Layout title="إدارة المجموعات">
       <div className="space-y-5">
-        <div role="group" aria-label="إجراءات المجموعات" className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 flex flex-wrap items-center gap-3 max-w-full">
-          <div className="flex-1 min-w-0 basis-full sm:basis-0 relative">
-            <Search size={16} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400" />
+        {/* Toolbar */}
+        <div role="group" aria-label="إجراءات المجموعات" className="glass-panel rounded-2xl p-4 sm:p-5 relative border border-slate-200/80 dark:border-white/10 shadow-sm flex flex-wrap items-center gap-3">
+          <div className="absolute top-0 inset-x-0 h-[1px] bg-gradient-to-r from-transparent via-cyan-400/40 to-transparent pointer-events-none" />
+          <div className="flex-1 min-w-48 relative">
+            <Search size={16} className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500 pointer-events-none" />
             <input type="text" value={search} onChange={e => setSearch(e.target.value)}
-              placeholder="بحث بالاسم..."
-              className="w-full pr-9 pl-3 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+              placeholder="بحث باسم المجموعة..."
+              className="w-full pr-10 pl-3.5 py-2.5 border border-slate-200 dark:border-white/10 rounded-xl text-sm bg-white/80 dark:bg-[#070b14]/90 text-slate-800 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-cyan-500/30 focus:border-cyan-400" />
           </div>
           <select value={subjectFilter} onChange={e => setSubjectFilter(e.target.value as SubjectId | '')}
-            className="px-3 py-2.5 border border-gray-200 rounded-xl text-sm bg-white focus:outline-none">
+            className="px-4 py-2.5 border border-slate-200 dark:border-white/10 rounded-xl text-sm bg-white/80 dark:bg-[#070b14]/90 text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-cyan-500/30 focus:border-cyan-400 cursor-pointer">
             <option value="">كل المواد</option>
             {getAllSubjects(settings?.customSubjects).map(s => <option key={s.id} value={s.id}>{s.icon} {s.name}</option>)}
           </select>
           {canWrite && (
             <button onClick={openAdd}
-              className="flex items-center gap-2 px-4 py-2.5 text-white rounded-xl text-sm font-medium"
-              style={{ backgroundColor: settings?.primaryColor || '#6366f1', color: getContrastColor(settings?.primaryColor || '#6366f1') }}>
+              className="flex items-center gap-2 px-5 py-2.5 text-white rounded-xl text-sm font-bold shadow-lg shadow-cyan-500/20 hover:scale-105 active:scale-95 transition-all cursor-pointer bg-gradient-to-r from-cyan-600 to-indigo-600 hover:from-cyan-500 hover:to-indigo-500">
               <Plus size={16} /> إضافة مجموعة
             </button>
           )}
         </div>
 
         {loading ? (
-          <div className="flex justify-center py-12"><div className="animate-spin w-8 h-8 border-4 border-indigo-500 border-t-transparent rounded-full" /></div>
+          <div className="flex justify-center py-12"><div className="animate-spin w-8 h-8 border-4 border-cyan-500 border-t-transparent rounded-full" /></div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {groups.map(group => {
@@ -160,69 +161,73 @@ export default function GroupsPage() {
               const teacher = teachers.find(t => t.id === group.teacherId);
               const fp = fillPercent(group);
               return (
-                <div key={group.id} className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5 hover:shadow-md transition-shadow">
-                  <div className="flex items-start justify-between mb-3">
+                <div key={group.id} className="glow-card group relative p-5 rounded-2xl bg-white/95 dark:bg-[#0c1324]/90 backdrop-blur-xl border border-slate-200/80 dark:border-white/10 shadow-sm transition-all duration-300">
+                  <div className="absolute top-0 inset-x-0 h-[2px] bg-gradient-to-r from-transparent via-cyan-400/50 to-transparent" />
+                  <div className="flex items-start justify-between mb-3.5">
                     <div>
-                      <h3 className="font-bold text-gray-900">{group.name}</h3>
-                      <p className="text-xs text-gray-500">{course?.name} {course?.icon}</p>
+                      <h3 className="font-bold text-base text-slate-900 dark:text-white tracking-tight">{group.name}</h3>
+                      <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">{course?.name} {course?.icon}</p>
                       {(() => {
                         const subject = getSubject(group.subjectId ?? course?.subjectId, settings?.customSubjects);
                         return subject ? (
-                          <span className="inline-block mt-1 text-[11px] px-2 py-0.5 rounded-full text-white"
+                          <span className="inline-flex items-center gap-1 mt-1.5 text-[11px] font-bold px-2.5 py-0.5 rounded-full text-white shadow-xs"
                             style={{ backgroundColor: subject.color }}>
-                            {subject.icon} {subject.name}
+                            <span>{subject.icon}</span>
+                            <span>{subject.name}</span>
                           </span>
                         ) : null;
                       })()}
                     </div>
                     <Badge status={group.status} />
                   </div>
-                  <div className="flex items-center justify-between text-xs mb-2">
-                    <p className="text-gray-600">👨‍🏫 {teacher?.name || 'غير محدد'}</p>
+                  <div className="flex items-center justify-between text-xs mb-3">
+                    <p className="text-slate-600 dark:text-slate-400 font-medium">👨‍🏫 {teacher?.name || 'غير محدد'}</p>
                     {typeof group.price === 'number' ? (
-                      <span className="font-semibold text-emerald-700 bg-emerald-50 border border-emerald-100 px-2 py-0.5 rounded-lg text-[11px]" title="سعر شهري خاص بهذه المجموعة">
+                      <span className="font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2.5 py-0.5 rounded-lg text-xs telemetry-number" title="سعر شهري خاص بهذه المجموعة">
                         {formatCurrency(group.price, settings?.currency)} <span className="text-[10px] font-normal">(خاص)</span>
                       </span>
                     ) : (
-                      <span className="text-gray-500 bg-gray-50 px-2 py-0.5 rounded-lg text-[11px]" title="سعر موروث من الكورس">
-                        {formatCurrency(course?.price || 0, settings?.currency)} <span className="text-[10px] text-gray-400">(موروث)</span>
+                      <span className="text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 px-2.5 py-0.5 rounded-lg text-xs telemetry-number" title="سعر موروث من الكورس">
+                        {formatCurrency(course?.price || 0, settings?.currency)} <span className="text-[10px] text-slate-400">(موروث)</span>
                       </span>
                     )}
                   </div>
 
                   {/* Fill bar */}
-                  <div className="mb-3">
-                    <div className="flex justify-between text-xs text-gray-500 mb-1">
+                  <div className="mb-3.5 bg-slate-50 dark:bg-white/5 p-2.5 rounded-xl border border-slate-100 dark:border-white/5">
+                    <div className="flex justify-between text-xs text-slate-500 dark:text-slate-400 mb-1.5 font-bold">
                       <span>{group.studentIds.length} / {group.maxStudents} طالب</span>
-                      <span>{fp}%</span>
+                      <span className="telemetry-number">{fp}%</span>
                     </div>
-                    <div className="w-full bg-gray-100 rounded-full h-2">
-                      <div className="h-2 rounded-full transition-all"
-                        style={{ width: `${fp}%`, backgroundColor: fp >= 90 ? '#ef4444' : fp >= 70 ? '#f97316' : settings?.primaryColor || '#6366f1' }} />
+                    <div className="w-full bg-slate-200 dark:bg-white/10 rounded-full h-2 overflow-hidden">
+                      <div className="h-2 rounded-full transition-all duration-500"
+                        style={{ width: `${fp}%`, backgroundColor: fp >= 90 ? '#f43f5e' : fp >= 70 ? '#f59e0b' : '#00f0ff' }} />
                     </div>
                   </div>
 
                   {/* Schedule */}
-                  <div className="text-xs text-gray-500 mb-3">
+                  <div className="text-xs text-slate-500 dark:text-slate-400 mb-4 bg-slate-50 dark:bg-white/5 p-2 rounded-xl border border-slate-100 dark:border-white/5 space-y-1">
                     {group.schedule.map((s, i) => (
-                      <div key={i}>
-                        {s.days.map(d => DAYS.find(dd => dd.key === d)?.label).join('، ')} • {s.startTime} - {s.endTime}
-                        {s.room && ` • قاعة: ${s.room}`}
+                      <div key={i} className="flex items-center gap-1.5">
+                        <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 shrink-0" />
+                        <span>{s.days.map(d => DAYS.find(dd => dd.key === d)?.label).join('، ')}</span>
+                        <span className="text-slate-400 font-mono" dir="ltr">• {s.startTime} - {s.endTime}</span>
+                        {s.room && <span className="text-cyan-600 dark:text-cyan-400 font-medium">• قاعة: {s.room}</span>}
                       </div>
                     ))}
                   </div>
 
                   <div className="flex gap-2">
-                    <button onClick={() => setViewGroup(group)} className="flex-1 py-1.5 text-xs bg-indigo-50 text-indigo-600 rounded-lg hover:bg-indigo-100 transition-colors flex items-center justify-center gap-1">
-                      <Users size={12} /> الطلاب
+                    <button onClick={() => setViewGroup(group)} className="flex-1 py-2 text-xs font-bold bg-indigo-500/10 text-indigo-600 dark:text-cyan-400 border border-indigo-500/20 dark:border-cyan-400/20 rounded-xl hover:bg-indigo-500/20 transition-all flex items-center justify-center gap-1.5 cursor-pointer">
+                      <Users size={13} /> الطلاب
                     </button>
-                    {canWrite && <button onClick={() => openEdit(group)} className="flex-1 py-1.5 text-xs bg-yellow-50 text-yellow-600 rounded-lg hover:bg-yellow-100 transition-colors">تعديل</button>}
-                    {canDelete && <button onClick={() => setDeleteId(group.id)} className="flex-1 py-1.5 text-xs bg-red-50 text-red-600 rounded-lg hover:bg-red-100 transition-colors">حذف</button>}
+                    {canWrite && <button onClick={() => openEdit(group)} className="flex-1 py-2 text-xs font-bold bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20 rounded-xl hover:bg-amber-500/20 transition-all cursor-pointer">تعديل</button>}
+                    {canDelete && <button onClick={() => setDeleteId(group.id)} className="flex-1 py-2 text-xs font-bold bg-rose-500/10 text-rose-600 dark:text-rose-400 border border-rose-500/20 rounded-xl hover:bg-rose-500/20 transition-all cursor-pointer">حذف</button>}
                   </div>
                 </div>
               );
             })}
-            {groups.length === 0 && <div className="col-span-3 text-center py-12 text-gray-400">لا توجد مجموعات</div>}
+            {groups.length === 0 && <div className="col-span-3 text-center py-12 text-slate-400">لا توجد مجموعات</div>}
           </div>
         )}
       </div>

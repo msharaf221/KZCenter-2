@@ -13,7 +13,7 @@ import type { Expense, Teacher } from '../domain/models';
 import { useCommandTask } from '../hooks/useCommandTask';
 import { usePageResource } from '../hooks/usePageResource';
 import { notify } from '../lib/notifications';
-import { formatCurrency, formatDate, getContrastColor } from '../lib/utils';
+import { formatCurrency, formatDate } from '../lib/utils';
 import { deleteExpense, saveExpense } from '../services/commands/expenses';
 import { loadExpensesList } from '../services/queries/expenses';
 import { loadTeachersList } from '../services/queries/teachers';
@@ -86,62 +86,63 @@ export default function PayrollPage() {
   return (
     <Layout title="إدارة الرواتب (دفعات بسيطة)">
       <div className="space-y-5">
-        <div className="flex flex-col sm:flex-row gap-4 items-center justify-between bg-white p-4 rounded-2xl shadow-sm border border-gray-100">
+        <div className="flex flex-col sm:flex-row gap-4 items-center justify-between glow-card relative bg-white/95 dark:bg-[#0c1324]/90 backdrop-blur-xl p-4 rounded-2xl shadow-sm border border-slate-200/80 dark:border-white/10 overflow-hidden">
+          <div className="absolute top-0 inset-x-0 h-[2px] bg-gradient-to-r from-transparent via-cyan-400/50 to-transparent pointer-events-none" />
           <div className="relative w-full sm:w-96">
-            <Search className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
+            <Search className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400" size={17} />
             <input type="text" placeholder="بحث في دفعات الرواتب..."
               value={search} onChange={e => setSearch(e.target.value)}
-              className="w-full pl-3 pr-10 py-2.5 bg-gray-50 border-transparent rounded-xl text-sm focus:border-indigo-500 focus:bg-white focus:ring-0 transition-colors" />
+              className="w-full pl-3.5 pr-10 py-2.5 bg-slate-50 dark:bg-[#070b14]/70 border border-slate-200 dark:border-white/10 rounded-xl text-sm text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 transition-all" />
           </div>
           {canWrite && (
             <button onClick={openAdd}
-              className="w-full sm:w-auto px-5 py-2.5 text-white rounded-xl text-sm font-medium transition-colors flex items-center justify-center gap-2"
-              style={{ backgroundColor: settings?.primaryColor || '#6366f1', color: getContrastColor(settings?.primaryColor || '#6366f1') }}>
+              className="w-full sm:w-auto px-5 py-2.5 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white rounded-xl text-sm font-bold shadow-[0_0_15px_rgba(0,240,255,0.3)] transition-all flex items-center justify-center gap-2">
               <Plus size={18} /> صرف راتب
             </button>
           )}
         </div>
 
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+        <div className="glow-card relative bg-white/95 dark:bg-[#0c1324]/90 backdrop-blur-xl rounded-2xl shadow-sm border border-slate-200/80 dark:border-white/10 overflow-hidden">
+          <div className="absolute top-0 inset-x-0 h-[2px] bg-gradient-to-r from-transparent via-cyan-400/50 to-transparent pointer-events-none" />
           <div className="overflow-x-auto">
             <table className="w-full text-right text-sm">
-              <thead className="bg-gray-50 text-gray-500">
+              <thead className="bg-slate-50/80 dark:bg-[#070b14]/80 border-b border-slate-200/80 dark:border-white/10 text-slate-500 dark:text-slate-400 font-bold">
                 <tr>
-                  <th className="px-4 py-3">التاريخ</th>
-                  <th className="px-4 py-3">المدرس/الموظف</th>
-                  <th className="px-4 py-3">المبلغ</th>
-                  <th className="px-4 py-3">البيان</th>
-                  <th className="px-4 py-3">إجراءات</th>
+                  <th className="px-4 py-3.5">التاريخ</th>
+                  <th className="px-4 py-3.5">المدرس/الموظف</th>
+                  <th className="px-4 py-3.5">المبلغ</th>
+                  <th className="px-4 py-3.5">البيان</th>
+                  <th className="px-4 py-3.5 text-center">إجراءات</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-100">
+              <tbody className="divide-y divide-slate-100 dark:divide-white/5">
                 {loading && expenses.length === 0 ? (
-                  <tr><td colSpan={5} className="px-4 py-8 text-center text-gray-400">جاري التحميل...</td></tr>
+                  <tr><td colSpan={5} className="px-4 py-8 text-center text-slate-400">جاري التحميل...</td></tr>
                 ) : expenses.length === 0 ? (
-                  <tr><td colSpan={5} className="px-4 py-8 text-center text-gray-400">لا يوجد رواتب مسجلة{search ? ' مطابقة للبحث' : ''}</td></tr>
+                  <tr><td colSpan={5} className="px-4 py-12 text-center text-slate-400">لا يوجد رواتب مسجلة{search ? ' مطابقة للبحث' : ''}</td></tr>
                 ) : (
                   expenses.map(e => (
-                    <tr key={e.id} className="hover:bg-gray-50/70 transition-colors">
-                      <td className="px-4 py-3 whitespace-nowrap">{formatDate(e.date, 'YYYY/MM/DD')}</td>
-                      <td className="px-4 py-3">
+                    <tr key={e.id} className="hover:bg-slate-50/50 dark:hover:bg-white/[0.02] transition-colors">
+                      <td className="px-4 py-3.5 font-mono text-xs text-slate-500 dark:text-slate-400 whitespace-nowrap">{formatDate(e.date, 'YYYY/MM/DD')}</td>
+                      <td className="px-4 py-3.5">
                         {e.teacherId ? (
-                          <Link to={`/teachers/${e.teacherId}`} className="font-medium text-indigo-600 hover:underline">
+                          <Link to={`/teachers/${e.teacherId}`} className="font-bold text-cyan-600 dark:text-cyan-400 hover:underline">
                             {teachers.find(t => t.id === e.teacherId)?.name || 'غير معروف'}
                           </Link>
-                        ) : <span className="text-gray-400">—</span>}
+                        ) : <span className="text-slate-400">—</span>}
                       </td>
-                      <td className="px-4 py-3 font-bold text-gray-900 whitespace-nowrap">{formatCurrency(e.amount, settings?.currency)}</td>
-                      <td className="px-4 py-3 text-gray-600 max-w-xs truncate" title={e.description}>{e.description}</td>
-                      <td className="px-4 py-3 whitespace-nowrap">
-                        <div className="flex items-center gap-1">
+                      <td className="px-4 py-3.5 font-mono font-black text-rose-600 dark:text-rose-400 whitespace-nowrap">{formatCurrency(e.amount, settings?.currency)}</td>
+                      <td className="px-4 py-3.5 text-slate-600 dark:text-slate-300 max-w-xs truncate" title={e.description}>{e.description}</td>
+                      <td className="px-4 py-3.5 whitespace-nowrap">
+                        <div className="flex items-center justify-center gap-1.5">
                           {canWrite && !e.payrollId && (
-                            <button onClick={() => openEdit(e)} className="p-1.5 text-gray-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors" title="تعديل">
-                              <Edit2 size={16} />
+                            <button onClick={() => openEdit(e)} className="p-1.5 rounded-lg hover:bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-transparent hover:border-amber-500/20 transition-all" title="تعديل">
+                              <Edit2 size={15} />
                             </button>
                           )}
                           {canDelete && (
-                            <button onClick={() => setDeleteId(e.id)} className="p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors" title="حذف">
-                              <Trash2 size={16} />
+                            <button onClick={() => setDeleteId(e.id)} className="p-1.5 rounded-lg hover:bg-rose-500/10 text-rose-600 dark:text-rose-400 border border-transparent hover:border-rose-500/20 transition-all" title="حذف">
+                              <Trash2 size={15} />
                             </button>
                           )}
                         </div>
@@ -153,7 +154,7 @@ export default function PayrollPage() {
             </table>
           </div>
           {totalPages > 1 && (
-            <div className="px-4 py-3 border-t border-gray-100 bg-gray-50/50">
+            <div className="px-4 py-3 border-t border-slate-200/80 dark:border-white/10 bg-slate-50/50 dark:bg-[#070b14]/50">
               <Pagination currentPage={page} totalPages={totalPages} onPageChange={setPage} totalItems={total} pageSize={PAGE_SIZE} />
             </div>
           )}
@@ -163,34 +164,33 @@ export default function PayrollPage() {
       <Modal isOpen={showModal} onClose={() => { if (!task.pending) setShowModal(false); }} title={editing ? 'تعديل دفعة' : 'صرف راتب جديد'}>
         <div className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">المدرس / الموظف (اختياري)</label>
+            <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1.5">المدرس / الموظف (اختياري)</label>
             <select value={form.teacherId} onChange={e => setForm({ ...form, teacherId: e.target.value })}
-              className="w-full px-3 py-2 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-indigo-500 bg-white">
-              <option value="">بدون تحديد</option>
-              {teachers.map(t => <option key={t.id} value={t.id}>{t.name}</option>)}
+              className="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-[#070b14]/70 border border-slate-200 dark:border-white/10 rounded-xl text-sm text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-cyan-500/50">
+              <option value="" className="bg-slate-900 text-white">بدون تحديد</option>
+              {teachers.map(t => <option key={t.id} value={t.id} className="bg-slate-900 text-white">{t.name}</option>)}
             </select>
           </div>
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">المبلغ</label>
+              <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1.5">المبلغ</label>
               <input type="number" min="0" value={form.amount || ''} onChange={e => setForm({ ...form, amount: +e.target.value })}
-                className="w-full px-3 py-2 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-indigo-500" autoFocus />
+                className="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-[#070b14]/70 border border-slate-200 dark:border-white/10 rounded-xl text-sm text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-cyan-500/50 font-mono" autoFocus />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">التاريخ</label>
+              <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1.5">التاريخ</label>
               <input type="date" value={form.date} onChange={e => setForm({ ...form, date: e.target.value })}
-                className="w-full px-3 py-2 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-indigo-500" />
+                className="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-[#070b14]/70 border border-slate-200 dark:border-white/10 rounded-xl text-sm text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-cyan-500/50 font-mono" />
             </div>
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">البيان / الوصف</label>
+            <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1.5">البيان / الوصف</label>
             <input type="text" value={form.description} onChange={e => setForm({ ...form, description: e.target.value })}
-              className="w-full px-3 py-2 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-indigo-500" />
+              className="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-[#070b14]/70 border border-slate-200 dark:border-white/10 rounded-xl text-sm text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-cyan-500/50" />
           </div>
           <div className="pt-2">
             <button disabled={task.pending} onClick={handleSave}
-              className="w-full py-2.5 text-white rounded-xl text-sm font-medium transition-colors"
-              style={{ backgroundColor: settings?.primaryColor || '#6366f1', color: getContrastColor(settings?.primaryColor || '#6366f1') }}>
+              className="w-full py-2.5 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white rounded-xl text-sm font-bold shadow-[0_0_15px_rgba(0,240,255,0.3)] transition-all">
               {task.pending ? 'جاري الحفظ...' : 'حفظ'}
             </button>
           </div>

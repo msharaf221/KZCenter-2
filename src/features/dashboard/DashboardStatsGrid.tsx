@@ -41,15 +41,15 @@ export default function DashboardStatsGrid({
         title="الطلاب النشطون"
         value={stats.activeStudents}
         icon={<GraduationCap size={24} />}
-        color="#6366f1"
-        subtitle="طالب مسجل"
+        color="#06b6d4"
+        subtitle="طالب مسجل بالمركز"
       />
       <StatCard
         title="المدرسون النشطون"
         value={stats.teachers}
         icon={<Users size={24} />}
         color="#8b5cf6"
-        subtitle="مدرس"
+        subtitle="مدرس معتمد"
       />
       <StatCard
         title="الكورسات"
@@ -63,15 +63,15 @@ export default function DashboardStatsGrid({
         value={stats.groups}
         icon={<Users2 size={24} />}
         color="#14b8a6"
-        subtitle="مجموعة"
+        subtitle="مجموعة دراسية"
       />
       {showMoney && (
         <StatCard
           title="إجمالي الإيرادات"
           value={formatCurrency(stats.totalRevenue, currency)}
           icon={<DollarSign size={24} />}
-          color="#22c55e"
-          subtitle="مجموع المدفوعات"
+          color="#10b981"
+          subtitle="مجموع المدفوعات المستلمة"
         />
       )}
       {showMoney && (
@@ -79,7 +79,7 @@ export default function DashboardStatsGrid({
           title="المدفوعات المعلقة"
           value={stats.pendingPayments}
           icon={<AlertCircle size={24} />}
-          color="#f97316"
+          color="#f59e0b"
           subtitle={formatCurrency(stats.pendingAmount, currency)}
         />
       )}
@@ -88,10 +88,10 @@ export default function DashboardStatsGrid({
           title="طلاب عليهم مبالغ"
           value={debtAlert && !debtAlert.loading && !debtAlert.unavailable ? debtAlert.debtorsCount : '—'}
           icon={<AlertTriangle size={24} />}
-          color="#ef4444"
+          color="#f43f5e"
           subtitle={
             !debtAlert || debtAlert.loading
-              ? 'جاري تحديث أرصدة الطلاب'
+              ? 'جاري تحديث أرصدة الطلاب...'
               : debtAlert.unavailable
                 ? 'تعذّر تأكيد أرصدة الطلاب'
                 : debtAlert.debtorsCount > 0
@@ -113,8 +113,8 @@ export default function DashboardStatsGrid({
           title="معدل النمو (إيرادات)"
           value={`${stats.growthRate >= 0 ? '↑' : '↓'} ${Math.abs(Math.round(stats.growthRate))}%`}
           icon={<TrendingUp size={24} />}
-          color={stats.growthRate >= 0 ? '#06b6d4' : '#ef4444'}
-          subtitle="مقارنة بالشهر الماضي"
+          color={stats.growthRate >= 0 ? '#00f0ff' : '#f43f5e'}
+          subtitle="مقارنة بالشهر السابق"
         />
       )}
     </div>

@@ -37,10 +37,10 @@ export default function DialogFrame({
         aria-labelledby={labelledBy}
         aria-describedby={describedBy}
         tabIndex={-1}
-        className={`relative bg-white/95 dark:bg-slate-900/95 backdrop-blur-2xl rounded-3xl shadow-2xl border border-slate-200/80 dark:border-slate-800/80 w-full fade-in overflow-hidden ${className}`}
+        className={`relative bg-white/95 dark:bg-[#0c1324]/95 backdrop-blur-2xl rounded-3xl shadow-2xl border border-slate-200/80 dark:border-white/10 w-full fade-in overflow-hidden ${className}`}
       >
         {/* Subtle luminous top highlight ray */}
-        <div className="absolute top-0 inset-x-0 h-[2px] bg-gradient-to-r from-transparent via-indigo-500/50 to-transparent pointer-events-none" />
+        <div className="absolute top-0 inset-x-0 h-[2px] bg-gradient-to-r from-transparent via-cyan-400/60 to-transparent pointer-events-none" />
         {children}
       </div>
     </div>

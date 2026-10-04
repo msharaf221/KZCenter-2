@@ -20,7 +20,7 @@ import { isCountedPayment } from '../lib/billing';
 import { METHOD_LABEL } from '../lib/cashbox';
 import { notify, notifyLatePayment, notifyPaymentReceived } from '../lib/notifications';
 import { amountToArabicWords, printReceipt } from '../lib/printing';
-import { downloadCSV, formatCurrency, formatDate, getContrastColor, getWhatsAppLink, paymentStatusLabel, toCSV } from '../lib/utils';
+import { downloadCSV, formatCurrency, formatDate, getWhatsAppLink, paymentStatusLabel, toCSV } from '../lib/utils';
 import { getStudentBalance } from '../services/balanceService';
 import { createPayment, deletePendingPayment, markPendingPaymentPaid } from '../services/commands/payments';
 import { cancelStudentPayment, refundStudentPayment } from '../services/commands/studentFinance';
@@ -226,38 +226,43 @@ export default function PaymentsPage() {
       <div className="space-y-5">
         {/* Summary */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4">
-            <p className="text-sm text-gray-500">إجمالي الصفحة المدفوع</p>
-            <p className="text-2xl font-bold text-green-600">{formatCurrency(totalPaid, settings?.currency)}</p>
+          <div className="glow-card relative p-5 rounded-2xl bg-white/95 dark:bg-[#0c1324]/90 backdrop-blur-xl border border-slate-200/80 dark:border-white/10 shadow-sm">
+            <div className="absolute top-0 inset-x-0 h-[2px] bg-gradient-to-r from-transparent via-emerald-400 to-transparent" />
+            <p className="text-xs font-bold text-slate-500 dark:text-slate-400 mb-1">إجمالي الصفحة المدفوع</p>
+            <p className="text-2xl sm:text-3xl font-black text-emerald-600 dark:text-emerald-400 telemetry-number">{formatCurrency(totalPaid, settings?.currency)}</p>
           </div>
-          <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4">
-            <p className="text-sm text-gray-500">إجمالي المعلق</p>
-            <p className="text-2xl font-bold text-orange-500">{formatCurrency(totalPending, settings?.currency)}</p>
+          <div className="glow-card relative p-5 rounded-2xl bg-white/95 dark:bg-[#0c1324]/90 backdrop-blur-xl border border-slate-200/80 dark:border-white/10 shadow-sm">
+            <div className="absolute top-0 inset-x-0 h-[2px] bg-gradient-to-r from-transparent via-amber-400 to-transparent" />
+            <p className="text-xs font-bold text-slate-500 dark:text-slate-400 mb-1">إجمالي المعلق</p>
+            <p className="text-2xl sm:text-3xl font-black text-amber-500 telemetry-number">{formatCurrency(totalPending, settings?.currency)}</p>
           </div>
-          <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4">
-            <p className="text-sm text-gray-500">المتبقي على الطلاب</p>
-            <p className="text-2xl font-bold text-red-600">{formatCurrency(remainingOnStudents, settings?.currency)}</p>
-            <p className="text-xs text-gray-400 mt-1">{debtorsCount} طالب عليهم مبالغ</p>
+          <div className="glow-card relative p-5 rounded-2xl bg-white/95 dark:bg-[#0c1324]/90 backdrop-blur-xl border border-slate-200/80 dark:border-white/10 shadow-sm">
+            <div className="absolute top-0 inset-x-0 h-[2px] bg-gradient-to-r from-transparent via-rose-400 to-transparent" />
+            <p className="text-xs font-bold text-slate-500 dark:text-slate-400 mb-1">المتبقي على الطلاب</p>
+            <p className="text-2xl sm:text-3xl font-black text-rose-500 telemetry-number">{formatCurrency(remainingOnStudents, settings?.currency)}</p>
+            <p className="text-[11px] text-slate-400 mt-1 font-medium">{debtorsCount} طالب عليهم مبالغ</p>
           </div>
-          <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4">
-            <p className="text-sm text-gray-500">عدد السجلات</p>
-            <p className="text-2xl font-bold text-gray-900">{total}</p>
+          <div className="glow-card relative p-5 rounded-2xl bg-white/95 dark:bg-[#0c1324]/90 backdrop-blur-xl border border-slate-200/80 dark:border-white/10 shadow-sm">
+            <div className="absolute top-0 inset-x-0 h-[2px] bg-gradient-to-r from-transparent via-cyan-400 to-transparent" />
+            <p className="text-xs font-bold text-slate-500 dark:text-slate-400 mb-1">عدد السجلات</p>
+            <p className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white telemetry-number">{total}</p>
           </div>
         </div>
 
         {/* Toolbar */}
-        <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4">
+        <div className="glass-panel rounded-2xl p-4 sm:p-5 relative border border-slate-200/80 dark:border-white/10 shadow-sm">
+          <div className="absolute top-0 inset-x-0 h-[1px] bg-gradient-to-r from-transparent via-cyan-400/40 to-transparent pointer-events-none" />
           <div className="flex flex-wrap items-center gap-3">
             <div className="flex-1 min-w-48 relative">
-              <Search size={16} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400" />
+              <Search size={16} className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500 pointer-events-none" />
               <input type="text" value={search} onChange={e => setSearch(e.target.value)}
                 placeholder="بحث باسم الطالب..."
-                className="w-full pr-9 pl-3 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+                className="w-full pr-10 pl-3.5 py-2.5 border border-slate-200 dark:border-white/10 rounded-xl text-sm bg-white/80 dark:bg-[#070b14]/90 text-slate-800 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-cyan-500/30 focus:border-cyan-400" />
             </div>
             <div className="relative">
-              <Filter size={16} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400" />
+              <Filter size={16} className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500 pointer-events-none" />
               <select value={statusFilter} onChange={e => setStatusFilter(e.target.value)}
-                className="pr-9 pl-3 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none bg-white">
+                className="pr-10 pl-4 py-2.5 border border-slate-200 dark:border-white/10 rounded-xl text-sm bg-white/80 dark:bg-[#070b14]/90 text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-cyan-500/30 focus:border-cyan-400 cursor-pointer">
                 <option value="">كل الحالات</option>
                 <option value="paid">مدفوع</option>
                 <option value="pending">معلق</option>
@@ -266,18 +271,17 @@ export default function PaymentsPage() {
             </div>
             {canEdit && selectedIds.length > 0 && (
               <button onClick={handleBulkMarkPaid}
-                className="flex items-center gap-2 px-3 py-2.5 bg-green-50 text-green-700 rounded-xl text-sm font-medium hover:bg-green-100">
+                className="flex items-center gap-2 px-4 py-2.5 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 rounded-xl text-sm font-bold hover:bg-emerald-500/20 transition-all cursor-pointer">
                 <CheckCircle size={16} /> تحديد كمدفوع ({selectedIds.length})
               </button>
             )}
             <div className="flex gap-2 mr-auto">
-              <button onClick={exportExcel} className="flex items-center gap-2 px-3 py-2.5 border border-gray-200 rounded-xl text-sm text-gray-700 hover:bg-gray-50">
-                <Download size={16} /> تصدير
+              <button onClick={exportExcel} className="flex items-center gap-2 px-3.5 py-2.5 border border-slate-200 dark:border-white/10 rounded-xl text-sm font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-white/5 transition-all cursor-pointer">
+                <Download size={16} className="text-slate-400" /> تصدير
               </button>
               {canCreate && (
                 <button onClick={() => setShowModal(true)}
-                  className="flex items-center gap-2 px-4 py-2.5 text-white rounded-xl text-sm font-medium"
-                  style={{ backgroundColor: settings?.primaryColor || '#6366f1', color: getContrastColor(settings?.primaryColor || '#6366f1') }}>
+                  className="flex items-center gap-2 px-5 py-2.5 text-white rounded-xl text-sm font-bold shadow-lg shadow-cyan-500/20 hover:scale-105 active:scale-95 transition-all cursor-pointer bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500">
                   <Plus size={16} /> إضافة دفعة
                 </button>
               )}
@@ -286,85 +290,85 @@ export default function PaymentsPage() {
         </div>
 
         {/* Table */}
-        <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+        <div className="glass-panel rounded-2xl border border-slate-200/80 dark:border-white/10 shadow-lg overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full">
-              <thead className="bg-gray-50">
+              <thead className="bg-slate-50/90 dark:bg-[#0b1122] border-b border-slate-200/80 dark:border-white/10">
                 <tr>
                   <th className="p-4 text-right w-10">
                     <input type="checkbox" onChange={e => setSelectedIds(e.target.checked ? payments.map(p => p.id) : [])}
                       checked={selectedIds.length === payments.length && payments.length > 0}
-                      className="rounded" />
+                      className="rounded accent-cyan-500" />
                   </th>
-                  <th className="p-4 text-right text-xs font-semibold text-gray-600 uppercase">الإيصال</th>
-                  <th className="p-4 text-right text-xs font-semibold text-gray-600 uppercase">الطالب</th>
-                  <th className="p-4 text-right text-xs font-semibold text-gray-600 uppercase">الكورس</th>
-                  <th className="p-4 text-right text-xs font-semibold text-gray-600 uppercase">الطريقة</th>
-                  <th className="p-4 text-right text-xs font-semibold text-gray-600 uppercase">المبلغ</th>
-                  <th className="p-4 text-right text-xs font-semibold text-gray-600 uppercase">النوع</th>
-                  <th className="p-4 text-right text-xs font-semibold text-gray-600 uppercase">الحالة</th>
-                  <th className="p-4 text-right text-xs font-semibold text-gray-600 uppercase">التاريخ</th>
-                  <th className="p-4 text-center text-xs font-semibold text-gray-600 uppercase">إجراءات</th>
+                  <th className="p-4 text-right text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">الإيصال</th>
+                  <th className="p-4 text-right text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">الطالب</th>
+                  <th className="p-4 text-right text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">الكورس</th>
+                  <th className="p-4 text-right text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">الطريقة</th>
+                  <th className="p-4 text-right text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">المبلغ</th>
+                  <th className="p-4 text-right text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">النوع</th>
+                  <th className="p-4 text-right text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">الحالة</th>
+                  <th className="p-4 text-right text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">التاريخ</th>
+                  <th className="p-4 text-center text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">إجراءات</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-50">
+              <tbody className="divide-y divide-slate-100 dark:divide-white/5">
                 {loading ? (
                   <tr><td colSpan={10} className="p-8 text-center">
-                    <div className="animate-spin w-6 h-6 border-4 border-indigo-500 border-t-transparent rounded-full mx-auto" />
+                    <div className="animate-spin w-7 h-7 border-4 border-cyan-500 border-t-transparent rounded-full mx-auto" />
                   </td></tr>
                 ) : payments.length === 0 ? (
-                  <tr><td colSpan={10} className="p-8 text-center text-gray-400">لا توجد مدفوعات</td></tr>
+                  <tr><td colSpan={10} className="p-8 text-center text-slate-400">لا توجد مدفوعات</td></tr>
                 ) : payments.map(payment => {
                   const refunded = refunds.filter(r => r.paymentId === payment.id).reduce((t, r) => t + r.amount, 0);
                   return (
-                    <tr key={payment.id} className={`hover:bg-gray-50 transition-colors ${payment.voided ? 'bg-red-50/40' : ''}`}>
+                    <tr key={payment.id} className={`hover:bg-slate-50/80 dark:hover:bg-cyan-950/20 transition-colors ${payment.voided ? 'bg-rose-50/30 dark:bg-rose-950/20' : ''}`}>
                       <td className="p-4">
                         <input type="checkbox" checked={selectedIds.includes(payment.id)} disabled={!!payment.voided}
                           onChange={e => setSelectedIds(e.target.checked ? [...selectedIds, payment.id] : selectedIds.filter(i => i !== payment.id))}
-                          className="rounded" />
+                          className="rounded accent-cyan-500" />
                       </td>
                       <td className="p-4 text-sm">
                         {payment.receiptNo ? (
-                          <span className="font-mono text-xs bg-gray-100 text-gray-700 px-2 py-1 rounded" dir="ltr">{payment.receiptNo}</span>
-                        ) : <span className="text-gray-300 text-xs">—</span>}
+                          <span className="font-mono text-xs bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 border border-cyan-500/20 px-2 py-1 rounded-md" dir="ltr">{payment.receiptNo}</span>
+                        ) : <span className="text-slate-400 text-xs">—</span>}
                         {payment.voided && (
-                          <span className="block mt-1 text-[10px] font-bold text-red-600">ملغاة — {payment.voidReason}</span>
+                          <span className="block mt-1 text-[10px] font-bold text-rose-500">ملغاة — {payment.voidReason}</span>
                         )}
                       </td>
-                      <td className="p-4 text-sm font-semibold text-gray-900">
-                        <span className={payment.voided ? 'line-through text-gray-400' : ''}>{getStudentName(payment.studentId)}</span>
-                        {(payment.collectedByName || payment.collectedBy) && <span className="block text-[10px] text-gray-400 font-normal">قبض: {payment.collectedByName || payment.collectedBy}</span>}
+                      <td className="p-4 text-sm font-bold text-slate-900 dark:text-white">
+                        <span className={payment.voided ? 'line-through text-slate-400' : ''}>{getStudentName(payment.studentId)}</span>
+                        {(payment.collectedByName || payment.collectedBy) && <span className="block text-[10px] text-slate-400 font-normal">قبض: {payment.collectedByName || payment.collectedBy}</span>}
                       </td>
-                      <td className="p-4 text-sm text-gray-600">{getCourseName(payment.courseId)}</td>
+                      <td className="p-4 text-sm text-slate-600 dark:text-slate-300">{getCourseName(payment.courseId)}</td>
                       <td className="p-4 text-sm">
-                        <span className="text-[11px] bg-gray-100 text-gray-700 px-2 py-1 rounded-full whitespace-nowrap">
+                        <span className="text-[11px] font-bold bg-slate-100 dark:bg-white/5 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-white/10 px-2.5 py-1 rounded-full whitespace-nowrap">
                           {METHOD_LABEL[payment.method || 'cash']}
                         </span>
                       </td>
-                      <td className={`p-4 text-sm font-bold ${payment.voided ? 'text-gray-400 line-through' : 'text-gray-900'}`}>
+                      <td className={`p-4 text-sm font-black telemetry-number ${payment.voided ? 'text-slate-400 line-through' : 'text-slate-900 dark:text-emerald-400'}`}>
                         {formatCurrency(payment.amount, settings?.currency)}
                         {refunded > 0 && !payment.voided && (
-                          <span className="block text-[10px] text-orange-600 font-normal no-underline">
+                          <span className="block text-[10px] text-amber-500 font-normal no-underline">
                             مسترد: {formatCurrency(refunded, settings?.currency)}
                           </span>
                         )}
                       </td>
                       <td className="p-4">
-                        <span className="text-xs bg-gray-100 text-gray-700 px-2 py-1 rounded-full">
+                        <span className="text-xs font-semibold bg-slate-100 dark:bg-white/5 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-white/10 px-2.5 py-1 rounded-full">
                           {payment.type === 'subscription' ? 'اشتراك' : payment.type === 'books' ? 'كتب' : 'أخرى'}
                         </span>
                       </td>
                       <td className="p-4"><Badge status={payment.status} /></td>
-                      <td className="p-4 text-sm text-gray-500">{formatDate(payment.date)}</td>
+                      <td className="p-4 text-sm font-mono text-slate-400">{formatDate(payment.date)}</td>
                       <td className="p-4">
-                        <div className="flex items-center justify-center gap-1">
+                        <div className="flex items-center justify-center gap-1.5">
                           {payment.status === 'late' && (() => {
                             const student = students.find(s => s.id === payment.studentId);
                             if (student && student.parentPhone) {
                               return (
                                 <a href={getWhatsAppLink(student.parentPhone, `نود تذكيركم بوجود دفعة متأخرة بقيمة ${payment.amount} للطالب/ة ${student.name}.`)}
                                   target="_blank" rel="noopener noreferrer"
-                                  className="p-1.5 rounded-lg hover:bg-green-50 text-green-600 transition-colors" title="إرسال تذكير عبر واتساب">
+                                  className="p-2 rounded-xl hover:bg-emerald-500/15 text-slate-500 hover:text-emerald-600 dark:text-slate-400 dark:hover:text-emerald-400 transition-colors" title="إرسال تذكير عبر واتساب">
                                   <MessageCircle size={15} />
                                 </a>
                               );
@@ -372,27 +376,27 @@ export default function PaymentsPage() {
                             return null;
                           })()}
                           {payment.status === 'paid' && (
-                            <button onClick={() => handlePrintReceipt(payment)} className="p-1.5 rounded-lg hover:bg-gray-100 text-gray-600 transition-colors" title="طباعة إيصال">
+                            <button onClick={() => handlePrintReceipt(payment)} className="p-2 rounded-xl hover:bg-cyan-500/15 text-slate-500 hover:text-cyan-600 dark:text-slate-400 dark:hover:text-cyan-400 transition-colors" title="طباعة إيصال">
                               <Printer size={15} />
                             </button>
                           )}
                           {canEdit && payment.status !== 'paid' && (
-                            <button onClick={() => handleMarkPaid(payment)} className="p-1.5 rounded-lg hover:bg-green-50 text-green-600 transition-colors" title="تحديد كمدفوع">
+                            <button onClick={() => handleMarkPaid(payment)} className="p-2 rounded-xl hover:bg-emerald-500/15 text-slate-500 hover:text-emerald-600 dark:text-slate-400 dark:hover:text-emerald-400 transition-colors" title="تحديد كمدفوع">
                               <CheckCircle size={15} />
                             </button>
                           )}
                           {canMoney && !payment.voided && payment.status === 'paid' && (
                             <>
-                              <button onClick={() => openRefund(payment)} className="p-1.5 rounded-lg hover:bg-orange-50 text-orange-600 transition-colors" title="استرداد مبلغ">
+                              <button onClick={() => openRefund(payment)} className="p-2 rounded-xl hover:bg-amber-500/15 text-slate-500 hover:text-amber-600 dark:text-slate-400 dark:hover:text-amber-400 transition-colors" title="استرداد مبلغ">
                                 <RotateCcw size={15} />
                               </button>
-                              <button onClick={() => { setVoidTarget(payment); setVoidReason(''); }} className="p-1.5 rounded-lg hover:bg-red-50 text-red-600 transition-colors" title="إلغاء الدفعة">
+                              <button onClick={() => { setVoidTarget(payment); setVoidReason(''); }} className="p-2 rounded-xl hover:bg-rose-500/15 text-slate-500 hover:text-rose-600 dark:text-slate-400 dark:hover:text-rose-400 transition-colors" title="إلغاء الدفعة">
                                 <Ban size={15} />
                               </button>
                             </>
                           )}
                           {canDelete && !payment.voided && payment.status !== 'paid' && (
-                            <button onClick={() => setDeleteId(payment.id)} className="p-1.5 rounded-lg hover:bg-red-50 text-red-600 transition-colors" title="حذف">
+                            <button onClick={() => setDeleteId(payment.id)} className="p-2 rounded-xl hover:bg-rose-500/15 text-slate-500 hover:text-rose-600 dark:text-slate-400 dark:hover:text-rose-400 transition-colors" title="حذف">
                               <Trash2 size={15} />
                             </button>
                           )}

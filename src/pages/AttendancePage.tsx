@@ -158,12 +158,13 @@ export default function AttendancePage() {
       <div className="space-y-5">
         {registerError && <ResourceError onRetry={loadAttendance} />}
         {/* Controls */}
-        <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5">
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-4">
+        <div className="glass-panel rounded-2xl p-5 border border-slate-200/80 dark:border-white/10 shadow-sm relative">
+          <div className="absolute top-0 inset-x-0 h-[1px] bg-gradient-to-r from-transparent via-cyan-400/40 to-transparent pointer-events-none" />
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-5">
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-1">المجموعة</label>
+              <label className="block text-sm font-bold text-slate-700 dark:text-slate-200 mb-1.5">المجموعة</label>
               <select value={selectedGroup} onChange={e => setSelectedGroup(e.target.value)}
-                className="w-full px-3 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none bg-white">
+                className="w-full px-3.5 py-2.5 border border-slate-200 dark:border-white/10 rounded-xl text-sm bg-white/80 dark:bg-[#070b14]/90 text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-cyan-500/30 focus:border-cyan-400 cursor-pointer">
                 {groups.map(g => {
                   const c = courses.find(c => c.id === g.courseId);
                   return <option key={g.id} value={g.id}>{g.name} - {c?.name}</option>;
@@ -171,41 +172,41 @@ export default function AttendancePage() {
               </select>
             </div>
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-1">التاريخ</label>
+              <label className="block text-sm font-bold text-slate-700 dark:text-slate-200 mb-1.5">التاريخ</label>
               <input type="date" value={selectedDate} onChange={e => setSelectedDate(e.target.value)}
-                className="w-full px-3 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none" />
+                className="w-full px-3.5 py-2.5 border border-slate-200 dark:border-white/10 rounded-xl text-sm bg-white/80 dark:bg-[#070b14]/90 text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-cyan-500/30 focus:border-cyan-400 font-mono" />
             </div>
             <div className="flex items-end gap-2">
               <button onClick={handlePrintSheet} disabled={!registerReady} title="طباعة ورقة الحضور"
-                className="py-2.5 px-3 bg-gray-50 text-gray-700 rounded-xl text-sm font-medium hover:bg-gray-100 transition-colors no-print">
+                className="py-2.5 px-3.5 bg-slate-100 dark:bg-white/5 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-white/10 rounded-xl text-sm font-medium hover:bg-slate-200 dark:hover:bg-white/10 transition-colors no-print">
                 <Printer size={16} />
               </button>
               <button onClick={handlePrintCards} disabled={!registerReady || groupStudents.length === 0} title="كارنيهات طلاب المجموعة مع الباركود"
-                className="py-2.5 px-3 bg-indigo-50 text-indigo-700 rounded-xl text-sm font-medium hover:bg-indigo-100 transition-colors no-print">
+                className="py-2.5 px-3.5 bg-indigo-500/10 text-indigo-600 dark:text-cyan-400 border border-indigo-500/20 dark:border-cyan-400/20 rounded-xl text-sm font-medium hover:bg-indigo-500/20 transition-colors no-print">
                 <CreditCard size={16} />
               </button>
               <button onClick={() => setAll('present')}
-                className="flex-1 py-2.5 bg-green-50 text-green-700 rounded-xl text-sm font-medium hover:bg-green-100 transition-colors">
+                className="flex-1 py-2.5 bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border border-emerald-500/25 rounded-xl text-xs font-bold hover:bg-emerald-500/25 transition-all">
                 ✓ الكل حاضر
               </button>
               <button onClick={() => setAll('absent')}
-                className="flex-1 py-2.5 bg-red-50 text-red-700 rounded-xl text-sm font-medium hover:bg-red-100 transition-colors">
+                className="flex-1 py-2.5 bg-rose-500/15 text-rose-600 dark:text-rose-400 border border-rose-500/25 rounded-xl text-xs font-bold hover:bg-rose-500/25 transition-all">
                 ✗ الكل غائب
               </button>
             </div>
           </div>
 
           {/* Summary */}
-          <div className="grid grid-cols-4 gap-3">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
             {[
-              { label: 'حاضر', count: counts.present, color: 'text-green-600 bg-green-50' },
-              { label: 'غائب', count: counts.absent, color: 'text-red-600 bg-red-50' },
-              { label: 'متأخر', count: counts.late, color: 'text-yellow-600 bg-yellow-50' },
-              { label: 'مستأذن', count: counts.excused, color: 'text-blue-600 bg-blue-50' },
+              { label: 'حاضر', count: counts.present, color: 'text-emerald-500 bg-emerald-500/10 border-emerald-500/20' },
+              { label: 'غائب', count: counts.absent, color: 'text-rose-500 bg-rose-500/10 border-rose-500/20' },
+              { label: 'متأخر', count: counts.late, color: 'text-amber-500 bg-amber-500/10 border-amber-500/20' },
+              { label: 'مستأذن', count: counts.excused, color: 'text-cyan-500 bg-cyan-500/10 border-cyan-500/20' },
             ].map(item => (
-              <div key={item.label} className={`p-3 rounded-xl text-center ${item.color}`}>
-                <p className="text-2xl font-bold">{registerReady ? item.count : '—'}</p>
-                <p className="text-xs font-medium">{item.label}</p>
+              <div key={item.label} className={`p-3.5 rounded-2xl text-center border backdrop-blur-md ${item.color}`}>
+                <p className="text-2xl sm:text-3xl font-black telemetry-number">{registerReady ? item.count : '—'}</p>
+                <p className="text-xs font-bold mt-0.5">{item.label}</p>
               </div>
             ))}
           </div>
@@ -224,34 +225,34 @@ export default function AttendancePage() {
 
         {/* Students List */}
         {group && groupStudents.length > 0 ? (
-          <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
-            <div className="p-4 border-b border-gray-100 flex items-center justify-between">
-              <h3 className="font-bold text-gray-900">طلاب: {group.name}</h3>
-              <p className="text-sm text-gray-500">{groupStudents.length} طالب • {formatDate(selectedDate)}</p>
+          <div className="glass-panel rounded-2xl border border-slate-200/80 dark:border-white/10 shadow-lg overflow-hidden">
+            <div className="p-4 border-b border-slate-200/80 dark:border-white/10 flex items-center justify-between bg-slate-50/80 dark:bg-white/5">
+              <h3 className="font-bold text-slate-900 dark:text-white">طلاب: {group.name}</h3>
+              <p className="text-xs font-medium text-slate-400">{groupStudents.length} طالب • {formatDate(selectedDate)}</p>
             </div>
-            <div className="divide-y divide-gray-50">
+            <div className="divide-y divide-slate-100 dark:divide-white/5">
               {groupStudents.map((student, idx) => {
                 const status = attendanceMap[student.id];
                 const attendance = existingAttendance.find(r => r.studentId === student.id);
                 const isLateJoiner = lateJoiners.has(student.id) && !attendance;
                 return (
-                  <div key={student.id} className={`flex items-center gap-4 p-4 transition-colors ${isLateJoiner ? 'bg-gray-50/60 opacity-70' : 'hover:bg-gray-50'}`}>
-                    <span className="w-6 text-sm text-gray-400 font-medium">{idx + 1}</span>
-                    <div className="w-9 h-9 rounded-full bg-indigo-100 flex items-center justify-center text-lg">
+                  <div key={student.id} className={`flex items-center gap-4 p-4 transition-colors ${isLateJoiner ? 'bg-slate-50/50 dark:bg-white/5 opacity-70' : 'hover:bg-slate-50/80 dark:hover:bg-white/5'}`}>
+                    <span className="w-6 text-sm text-slate-400 font-mono">{idx + 1}</span>
+                    <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-indigo-500/15 to-purple-500/15 dark:from-cyan-500/20 dark:to-indigo-500/20 border border-indigo-500/25 dark:border-cyan-400/30 flex items-center justify-center text-base shrink-0 shadow-xs">
                       {student.gender === 'male' ? '👦' : '👧'}
                     </div>
                     <div className="flex-1">
-                      <p className="text-sm font-semibold text-gray-900 flex items-center gap-2 flex-wrap">
+                      <p className="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2 flex-wrap">
                         {student.name}
                         {isLateJoiner && (
-                          <span className="px-1.5 py-0.5 rounded-md bg-gray-200 text-gray-600 text-[10px] font-bold">
+                          <span className="px-2 py-0.5 rounded-md bg-slate-200 dark:bg-white/10 text-slate-600 dark:text-slate-300 text-[10px] font-bold">
                             التحق بعد هذا التاريخ — لا يُحتسب
                           </span>
                         )}
                       </p>
-                      <p className="text-xs text-gray-500">{student.parentPhone}</p>
+                      <p className="text-xs text-slate-400 font-mono mt-0.5" dir="ltr">{student.parentPhone}</p>
                       {attendance?.checkInTime && (
-                        <p className="text-xs text-green-600">دخول: {attendance.checkInTime}
+                        <p className="text-xs text-emerald-500 font-medium mt-1 font-mono">دخول: {attendance.checkInTime}
                           {attendance.checkOutTime && ` • خروج: ${attendance.checkOutTime}`}
                         </p>
                       )}

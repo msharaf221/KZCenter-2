@@ -170,9 +170,9 @@ export default function Sidebar() {
       dir="rtl"
       className={`
         fixed top-0 right-0 h-full z-40 flex flex-col
-        bg-white/85 dark:bg-slate-900/85 backdrop-blur-xl
-        border-l border-slate-200/80 dark:border-slate-800/80
-        shadow-[0_4px_30px_rgba(0,0,0,0.06)] dark:shadow-[0_4px_30px_rgba(0,0,0,0.4)]
+        bg-white/90 dark:bg-[#080d1a]/95 backdrop-blur-2xl
+        border-l border-slate-200/80 dark:border-white/10
+        shadow-[0_4px_30px_rgba(0,0,0,0.06)] dark:shadow-[-10px_0_40px_rgba(0,0,0,0.6)]
         sidebar-transition select-none
         ${sidebarOpen ? 'w-64' : 'w-16'}
       `}
@@ -186,7 +186,7 @@ export default function Sidebar() {
       />
 
       {/* Logo */}
-      <div className="flex items-center justify-between p-4 border-b border-slate-200/70 dark:border-slate-800/70 min-h-[64px]">
+      <div className="flex items-center justify-between p-4 border-b border-slate-200/70 dark:border-white/10 min-h-[64px]">
         {sidebarOpen && (
           <div className="flex items-center gap-2.5 min-w-0 flex-1">
             <div className="relative shrink-0">
@@ -195,7 +195,7 @@ export default function Sidebar() {
                 style={{ backgroundColor: settings?.primaryColor || '#6366f1' }}
               />
               <div
-                className="relative w-8 h-8 rounded-xl flex items-center justify-center font-black text-sm shadow-xs"
+                className="relative w-8 h-8 rounded-xl flex items-center justify-center font-black text-sm shadow-xs ring-1 ring-white/20"
                 style={{
                   backgroundColor: settings?.primaryColor || '#6366f1',
                   color: getContrastColor(settings?.primaryColor || '#6366f1'),
@@ -204,7 +204,7 @@ export default function Sidebar() {
                 E
               </div>
             </div>
-            <span className="font-bold text-gray-900 text-sm whitespace-nowrap overflow-visible flex-1 min-w-max px-2 text-right leading-relaxed">
+            <span className="font-bold text-gray-900 dark:text-white text-sm whitespace-nowrap overflow-visible flex-1 min-w-max px-2 text-right leading-relaxed">
               {settings?.centerName || 'EduCenter Pro'}
             </span>
           </div>
@@ -216,7 +216,7 @@ export default function Sidebar() {
               style={{ backgroundColor: settings?.primaryColor || '#6366f1' }}
             />
             <div
-              className="relative w-8 h-8 rounded-xl flex items-center justify-center font-black text-sm shadow-xs"
+              className="relative w-8 h-8 rounded-xl flex items-center justify-center font-black text-sm shadow-xs ring-1 ring-white/20"
               style={{
                 backgroundColor: settings?.primaryColor || '#6366f1',
                 color: getContrastColor(settings?.primaryColor || '#6366f1'),
@@ -228,7 +228,7 @@ export default function Sidebar() {
         )}
         <button
           onClick={() => setSidebarOpen(!sidebarOpen)}
-          className="p-1.5 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 transition-colors shrink-0"
+          className="p-1.5 rounded-xl hover:bg-slate-100 dark:hover:bg-white/10 text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 transition-colors shrink-0"
           aria-label={sidebarOpen ? 'تصغير القائمة الجانبية' : 'توسيع القائمة الجانبية'}
         >
           {sidebarOpen ? <ChevronRight size={18} /> : <ChevronLeft size={18} />}
@@ -243,7 +243,7 @@ export default function Sidebar() {
         onClickCapture={captureScroll}
         onWheel={handleUserInteraction}
         onTouchStart={handleUserInteraction}
-        className="flex-1 overflow-y-auto py-3 px-2 space-y-1"
+        className="flex-1 overflow-y-auto py-3 px-2 space-y-1.5"
       >
         {visibleItems.map(item => (
           <NavLink
@@ -255,8 +255,8 @@ export default function Sidebar() {
               flex items-center gap-3 px-3 py-2.5 rounded-xl
               transition-all duration-200 group relative
               ${isActive
-                ? 'text-white shadow-md shadow-indigo-500/20 font-semibold'
-                : 'text-slate-600 dark:text-slate-300 hover:bg-slate-100/80 dark:hover:bg-slate-800/60 hover:text-slate-900 dark:hover:text-slate-100'
+                ? 'text-white shadow-md shadow-indigo-500/20 font-bold'
+                : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100/80 dark:hover:bg-white/5 hover:text-slate-900 dark:hover:text-white'
               }
               ${!sidebarOpen ? 'justify-center px-0' : ''}
             `}
@@ -273,7 +273,7 @@ export default function Sidebar() {
               <item.icon size={20} />
             </span>
             {sidebarOpen && (
-              <span className="font-medium text-sm whitespace-nowrap overflow-visible flex-1 min-w-max px-2 text-right leading-relaxed">
+              <span className="font-semibold text-sm whitespace-nowrap overflow-visible flex-1 min-w-max px-2 text-right leading-relaxed">
                 {item.label}
               </span>
             )}
@@ -289,7 +289,7 @@ export default function Sidebar() {
               ))}
             {!sidebarOpen && (
               <div
-                className="absolute right-full mr-2.5 bg-slate-900/90 dark:bg-slate-800/95 backdrop-blur-md text-white text-xs font-semibold px-3 py-1.5 rounded-xl
+                className="absolute right-full mr-2.5 bg-slate-900/95 dark:bg-[#0d1426]/95 backdrop-blur-md text-white text-xs font-semibold px-3 py-1.5 rounded-xl
                 opacity-0 group-hover:opacity-100 transition-all duration-200 whitespace-nowrap pointer-events-none z-50 shadow-xl border border-white/10 leading-normal"
               >
                 {item.label}
@@ -300,12 +300,12 @@ export default function Sidebar() {
       </nav>
 
       {/* User info & Logout */}
-      <div className="border-t border-slate-200/70 dark:border-slate-800/70 p-3">
+      <div className="border-t border-slate-200/70 dark:border-white/10 p-3">
         {sidebarOpen ? (
-          <div className="flex items-center gap-3 p-1.5 rounded-2xl bg-slate-50/70 dark:bg-slate-800/40 border border-slate-200/50 dark:border-slate-700/50">
+          <div className="flex items-center gap-3 p-2 rounded-2xl bg-slate-50/70 dark:bg-white/5 border border-slate-200/50 dark:border-white/10">
             <div className="relative shrink-0">
               <div
-                className="w-9 h-9 rounded-xl flex items-center justify-center font-bold text-sm shadow-xs"
+                className="w-9 h-9 rounded-xl flex items-center justify-center font-bold text-sm shadow-xs ring-1 ring-white/20"
                 style={{
                   backgroundColor: settings?.primaryColor || '#6366f1',
                   color: getContrastColor(settings?.primaryColor || '#6366f1'),
@@ -313,13 +313,13 @@ export default function Sidebar() {
               >
                 {user?.username?.[0]?.toUpperCase() || 'A'}
               </div>
-              <span className="absolute -bottom-0.5 -left-0.5 w-2.5 h-2.5 bg-emerald-500 rounded-full ring-2 ring-white dark:ring-slate-900" />
+              <span className="absolute -bottom-0.5 -left-0.5 w-2.5 h-2.5 bg-emerald-500 rounded-full ring-2 ring-white dark:ring-[#080d1a]" />
             </div>
             <div className="flex-1 min-w-max px-2 overflow-visible">
-              <p className="text-sm font-semibold text-gray-900 whitespace-nowrap overflow-visible text-right leading-relaxed">
+              <p className="text-sm font-bold text-gray-900 dark:text-white whitespace-nowrap overflow-visible text-right leading-relaxed">
                 {user?.username}
               </p>
-              <p className="text-xs text-gray-500 whitespace-nowrap overflow-visible text-right leading-relaxed">
+              <p className="text-xs text-gray-500 dark:text-slate-400 whitespace-nowrap overflow-visible text-right leading-relaxed">
                 {user?.role ? ROLE_LABEL[user.role] : ''}
               </p>
             </div>

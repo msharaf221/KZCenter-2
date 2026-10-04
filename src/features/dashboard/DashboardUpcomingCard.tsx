@@ -21,8 +21,9 @@ export default function DashboardUpcomingCard({
   if (!upcoming || upcoming.count <= 0) return null;
 
   return (
-    <div className="glow-card relative bg-white/95 dark:bg-slate-900/90 backdrop-blur-md rounded-3xl border border-amber-500/20 dark:border-amber-500/20 shadow-[0_4px_20px_-2px_rgba(0,0,0,0.04)] dark:shadow-[0_4px_20px_-2px_rgba(0,0,0,0.4)] overflow-hidden">
-      <div className="p-5 sm:p-6 border-b border-slate-200/70 dark:border-slate-800/70 flex flex-wrap items-center justify-between gap-3">
+    <div className="glow-card relative bg-white/95 dark:bg-[#0c1324]/90 backdrop-blur-xl rounded-3xl border border-amber-500/20 shadow-sm overflow-hidden">
+      <div className="absolute top-0 inset-x-0 h-[2px] bg-gradient-to-r from-transparent via-amber-400/50 to-transparent pointer-events-none" />
+      <div className="p-5 sm:p-6 border-b border-slate-200/70 dark:border-white/10 flex flex-wrap items-center justify-between gap-3">
         <div className="flex items-center gap-2.5">
           <div className="p-2 rounded-xl bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20 shrink-0">
             <Clock size={18} />
@@ -36,7 +37,7 @@ export default function DashboardUpcomingCard({
         </div>
         <button
           onClick={onNavigateToPayments}
-          className="text-xs font-bold text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 transition-colors cursor-pointer"
+          className="text-xs font-bold text-amber-600 dark:text-amber-400 hover:text-amber-700 dark:hover:text-amber-300 transition-colors cursor-pointer"
         >
           تحصيل الأقساط ←
         </button>

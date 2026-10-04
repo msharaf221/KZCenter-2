@@ -82,50 +82,51 @@ export default function TeachersPage() {
   return (
     <Layout title="إدارة المدرسين">
       <div className="space-y-5">
-        <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4">
-          <div className="flex flex-wrap items-center gap-3">
-            <div className="flex-1 relative">
-              <Search size={16} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400" />
-              <input type="text" value={search} onChange={e => setSearch(e.target.value)}
-                placeholder="بحث بالاسم أو التخصص..."
-                className="w-full pr-9 pl-3 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500" />
-            </div>
-            {showMoney && (
-              <button onClick={() => navigate('/payroll')} className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium bg-indigo-50 text-indigo-700 hover:bg-indigo-100">
-                <Wallet size={16} /> مرتبات المدرسين
-              </button>
-            )}
-            {canWrite && (
-              <button onClick={openAdd}
-                className="flex items-center gap-2 px-4 py-2.5 text-white rounded-xl text-sm font-medium"
-                style={{ backgroundColor: settings?.primaryColor || '#6366f1', color: getContrastColor(settings?.primaryColor || '#6366f1') }}>
-                <Plus size={16} /> إضافة مدرس
-              </button>
-            )}
+        {/* Toolbar */}
+        <div className="glass-panel rounded-2xl p-4 sm:p-5 relative border border-slate-200/80 dark:border-white/10 shadow-sm flex flex-wrap items-center gap-3">
+          <div className="absolute top-0 inset-x-0 h-[1px] bg-gradient-to-r from-transparent via-cyan-400/40 to-transparent pointer-events-none" />
+          <div className="flex-1 min-w-48 relative">
+            <Search size={16} className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500 pointer-events-none" />
+            <input type="text" value={search} onChange={e => setSearch(e.target.value)}
+              placeholder="بحث بالاسم أو التخصص..."
+              className="w-full pr-10 pl-3.5 py-2.5 border border-slate-200 dark:border-white/10 rounded-xl text-sm bg-white/80 dark:bg-[#070b14]/90 text-slate-800 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-cyan-500/30 focus:border-cyan-400" />
           </div>
+          {showMoney && (
+            <button onClick={() => navigate('/payroll')}
+              className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-bold bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 border border-indigo-500/20 hover:bg-indigo-500/20 transition-all cursor-pointer">
+              <Wallet size={16} /> مرتبات المدرسين
+            </button>
+          )}
+          {canWrite && (
+            <button onClick={openAdd}
+              className="flex items-center gap-2 px-5 py-2.5 text-white rounded-xl text-sm font-bold shadow-lg shadow-cyan-500/20 hover:scale-105 active:scale-95 transition-all cursor-pointer bg-gradient-to-r from-cyan-600 to-indigo-600 hover:from-cyan-500 hover:to-indigo-500">
+              <Plus size={16} /> إضافة مدرس
+            </button>
+          )}
         </div>
 
         {loading ? (
-          <div className="flex justify-center py-12"><div className="animate-spin w-8 h-8 border-4 border-indigo-500 border-t-transparent rounded-full" /></div>
+          <div className="flex justify-center py-12"><div className="animate-spin w-8 h-8 border-4 border-cyan-500 border-t-transparent rounded-full" /></div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {teachers.map(teacher => (
-              <div key={teacher.id} className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5 hover:shadow-md transition-shadow">
+              <div key={teacher.id} className="glow-card relative p-5 rounded-2xl bg-white/95 dark:bg-[#0c1324]/90 backdrop-blur-xl border border-slate-200/80 dark:border-white/10 shadow-sm transition-all duration-300">
+                <div className="absolute top-0 inset-x-0 h-[2px] bg-gradient-to-r from-transparent via-cyan-400/50 to-transparent pointer-events-none" />
                 <div className="flex items-start justify-between mb-4">
                   <div className="flex items-center gap-3">
-                    <div className="w-12 h-12 rounded-2xl bg-indigo-100 flex items-center justify-center text-2xl">
+                    <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-cyan-500/20 to-indigo-500/20 border border-cyan-400/30 flex items-center justify-center text-2xl shadow-inner">
                       👨‍🏫
                     </div>
                     <div>
-                      <h3 className="font-bold text-gray-900 text-sm">{teacher.name}</h3>
-                      <p className="text-xs text-gray-500">{teacher.specialization}</p>
+                      <h3 className="font-bold text-slate-900 dark:text-white text-base tracking-tight">{teacher.name}</h3>
+                      <p className="text-xs text-slate-500 dark:text-slate-400 font-medium">{teacher.specialization}</p>
                       {(teacher.subjectIds || []).length > 0 && (
-                        <div className="flex flex-wrap gap-1 mt-1">
+                        <div className="flex flex-wrap gap-1 mt-1.5">
                           {(teacher.subjectIds || []).map(id => {
                             const subject = getSubject(id, settings?.customSubjects);
                             if (!subject) return null;
                             return (
-                              <span key={id} className="text-[10px] px-1.5 py-0.5 rounded-full text-white"
+                              <span key={id} className="text-[10px] font-bold px-2 py-0.5 rounded-full text-white shadow-sm"
                                 style={{ backgroundColor: subject.color }}>
                                 {subject.icon} {subject.name}
                               </span>
@@ -138,29 +139,42 @@ export default function TeachersPage() {
                   <Badge status={teacher.status} />
                 </div>
                 <div className="grid grid-cols-2 gap-3 mb-4">
-                  <div className="p-2 bg-gray-50 rounded-lg text-center">
-                    <p className="text-lg font-bold text-gray-900">{groupCounts[teacher.id] || 0}</p>
-                    <p className="text-xs text-gray-500">مجموعة</p>
+                  <div className="p-3 bg-slate-50/70 dark:bg-[#070b14]/70 border border-slate-200/50 dark:border-white/5 rounded-xl text-center">
+                    <p className="text-xl font-black text-slate-900 dark:text-slate-100 font-mono">{groupCounts[teacher.id] || 0}</p>
+                    <p className="text-[11px] font-bold text-slate-400 dark:text-slate-500 mt-0.5">مجموعة</p>
                   </div>
-                  <div className="p-2 bg-gray-50 rounded-lg text-center">
-                    <p className="text-lg font-bold text-gray-900">{studentCounts[teacher.id] || 0}</p>
-                    <p className="text-xs text-gray-500">طالب</p>
+                  <div className="p-3 bg-slate-50/70 dark:bg-[#070b14]/70 border border-slate-200/50 dark:border-white/5 rounded-xl text-center">
+                    <p className="text-xl font-black text-slate-900 dark:text-slate-100 font-mono">{studentCounts[teacher.id] || 0}</p>
+                    <p className="text-[11px] font-bold text-slate-400 dark:text-slate-500 mt-0.5">طالب</p>
                   </div>
                 </div>
-                <div className="text-xs text-gray-500 mb-3">
-                  <p>📱 {teacher.phone}</p>
-                  {teacher.email && <p>📧 {teacher.email}</p>}
-                  {showMoney && <p className="text-green-600 font-medium mt-1">💰 {describeTeacherPay(teacher, settings?.currency)}</p>}
+                <div className="text-xs text-slate-500 dark:text-slate-400 mb-4 space-y-1">
+                  <p className="flex items-center gap-1.5" dir="ltr"><span className="text-slate-400">📱</span> {teacher.phone}</p>
+                  {teacher.email && <p className="flex items-center gap-1.5"><span className="text-slate-400">📧</span> {teacher.email}</p>}
+                  {showMoney && <p className="text-emerald-600 dark:text-emerald-400 font-bold mt-1.5 flex items-center gap-1.5"><span>💰</span> {describeTeacherPay(teacher, settings?.currency)}</p>}
                 </div>
                 <div className="flex gap-2">
-                  <button onClick={() => navigate(`/teachers/${teacher.id}`)} className="flex-1 py-1.5 text-xs bg-indigo-50 text-indigo-600 rounded-lg hover:bg-indigo-100 transition-colors">عرض</button>
-                  {canWrite && <button onClick={() => openEdit(teacher)} className="flex-1 py-1.5 text-xs bg-yellow-50 text-yellow-600 rounded-lg hover:bg-yellow-100 transition-colors">تعديل</button>}
-                  {canDelete && <button onClick={() => setDeleteId(teacher.id)} className="flex-1 py-1.5 text-xs bg-red-50 text-red-600 rounded-lg hover:bg-red-100 transition-colors">حذف</button>}
+                  <button onClick={() => navigate(`/teachers/${teacher.id}`)}
+                    className="flex-1 py-2 text-xs font-bold bg-indigo-500/10 text-indigo-600 dark:text-cyan-400 border border-indigo-500/20 dark:border-cyan-400/20 rounded-xl hover:bg-indigo-500/20 transition-all cursor-pointer">
+                    عرض
+                  </button>
+                  {canWrite && (
+                    <button onClick={() => openEdit(teacher)}
+                      className="flex-1 py-2 text-xs font-bold bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20 rounded-xl hover:bg-amber-500/20 transition-all cursor-pointer">
+                      تعديل
+                    </button>
+                  )}
+                  {canDelete && (
+                    <button onClick={() => setDeleteId(teacher.id)}
+                      className="flex-1 py-2 text-xs font-bold bg-rose-500/10 text-rose-600 dark:text-rose-400 border border-rose-500/20 rounded-xl hover:bg-rose-500/20 transition-all cursor-pointer">
+                      حذف
+                    </button>
+                  )}
                 </div>
               </div>
             ))}
             {teachers.length === 0 && (
-              <div className="col-span-3 text-center py-12 text-gray-400">لا يوجد مدرسون</div>
+              <div className="col-span-3 text-center py-12 text-slate-400">لا يوجد مدرسون</div>
             )}
           </div>
         )}

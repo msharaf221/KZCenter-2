@@ -15,11 +15,16 @@ export default function DashboardTodayScheduleCard({
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
       {/* Today's Groups */}
-      <div className="glow-card relative bg-white/95 dark:bg-slate-900/90 backdrop-blur-md rounded-3xl border border-slate-200/80 dark:border-slate-800/80 shadow-[0_4px_20px_-2px_rgba(0,0,0,0.04)] dark:shadow-[0_4px_20px_-2px_rgba(0,0,0,0.4)] overflow-hidden">
-        <div className="p-5 sm:p-6 border-b border-slate-200/70 dark:border-slate-800/70">
-          <h3 className="text-base font-black text-slate-900 dark:text-slate-100 tracking-tight">
+      <div className="glow-card relative bg-white/95 dark:bg-[#0c1324]/90 backdrop-blur-xl rounded-3xl border border-slate-200/80 dark:border-white/10 shadow-sm overflow-hidden">
+        <div className="absolute top-0 inset-x-0 h-[2px] bg-gradient-to-r from-transparent via-cyan-400/50 to-transparent pointer-events-none" />
+        <div className="p-5 sm:p-6 border-b border-slate-200/70 dark:border-white/10 flex items-center justify-between">
+          <h3 className="text-base font-black text-slate-900 dark:text-slate-100 tracking-tight flex items-center gap-2">
+            <span className="w-2.5 h-2.5 rounded-full bg-cyan-400 animate-pulse shadow-[0_0_8px_#00f0ff]" />
             حصص اليوم — {getArabicDay(todayKey)}
           </h3>
+          <span className="text-xs font-mono font-bold px-2.5 py-1 rounded-full bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 border border-cyan-500/20">
+            {todayGroups.length} حصة
+          </span>
         </div>
         <div className="p-4 sm:p-6">
           {todayGroups.length === 0 ? (
@@ -29,7 +34,7 @@ export default function DashboardTodayScheduleCard({
               {todayGroups.map((group) => (
                 <div
                   key={group.id}
-                  className="flex items-center justify-between p-3.5 rounded-2xl bg-slate-50/70 dark:bg-slate-800/40 border border-slate-200/50 dark:border-slate-700/50 hover:bg-indigo-50/40 dark:hover:bg-indigo-950/20 transition-all"
+                  className="flex items-center justify-between p-3.5 rounded-2xl bg-slate-50/70 dark:bg-[#070b14]/70 border border-slate-200/50 dark:border-white/5 hover:border-cyan-500/30 transition-all"
                 >
                   <div>
                     <p className="text-sm font-bold text-slate-900 dark:text-slate-100">{group.name}</p>
@@ -41,7 +46,7 @@ export default function DashboardTodayScheduleCard({
                     {group.schedule
                       .filter((s) => s.days.includes(todayKey))
                       .map((s, i) => (
-                        <p key={i} className="text-xs font-bold font-mono text-indigo-600 dark:text-indigo-400" dir="ltr">
+                        <p key={i} className="text-xs font-bold font-mono text-cyan-600 dark:text-cyan-400" dir="ltr">
                           {s.startTime} - {s.endTime}
                         </p>
                       ))}
@@ -55,9 +60,13 @@ export default function DashboardTodayScheduleCard({
       </div>
 
       {/* Recent Students */}
-      <div className="glow-card relative bg-white/95 dark:bg-slate-900/90 backdrop-blur-md rounded-3xl border border-slate-200/80 dark:border-slate-800/80 shadow-[0_4px_20px_-2px_rgba(0,0,0,0.04)] dark:shadow-[0_4px_20px_-2px_rgba(0,0,0,0.4)] overflow-hidden">
-        <div className="p-5 sm:p-6 border-b border-slate-200/70 dark:border-slate-800/70">
-          <h3 className="text-base font-black text-slate-900 dark:text-slate-100 tracking-tight">آخر الطلاب المسجلين</h3>
+      <div className="glow-card relative bg-white/95 dark:bg-[#0c1324]/90 backdrop-blur-xl rounded-3xl border border-slate-200/80 dark:border-white/10 shadow-sm overflow-hidden">
+        <div className="absolute top-0 inset-x-0 h-[2px] bg-gradient-to-r from-transparent via-violet-400/50 to-transparent pointer-events-none" />
+        <div className="p-5 sm:p-6 border-b border-slate-200/70 dark:border-white/10 flex items-center justify-between">
+          <h3 className="text-base font-black text-slate-900 dark:text-slate-100 tracking-tight flex items-center gap-2">
+            <span className="w-2.5 h-2.5 rounded-full bg-violet-400 animate-pulse shadow-[0_0_8px_#8b5cf6]" />
+            آخر الطلاب المسجلين
+          </h3>
         </div>
         <div className="p-4 sm:p-6">
           {recentStudents.length === 0 ? (

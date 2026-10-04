@@ -20,7 +20,7 @@ import { useAuth } from '../contexts/AuthContext';
 import QuickCollectDialog from '../features/payments/QuickCollectDialog';
 import { usePageResource } from '../hooks/usePageResource';
 import { notify } from '../lib/notifications';
-import { downloadCSV, formatCurrency, formatDate, getContrastColor, getWhatsAppLink, toCSV } from '../lib/utils';
+import { downloadCSV, formatCurrency, formatDate, getWhatsAppLink, toCSV } from '../lib/utils';
 import type { DebtorRow } from '../services/balanceService';
 import type { WriteOffResult, WriteOffScope } from '../services/debtWriteOffService';
 import { loadDebtors } from '../services/queries/debtors';
@@ -34,7 +34,6 @@ export default function DebtorsPage() {
   const { can } = useAuth();
   const canCollect = can('payments', 'create');
   const canWriteOff = can('debtors', 'delete'); // إبراء الذمة = إلغاء أقساط → صلاحية حذف
-  const primaryColor = settings?.primaryColor || '#6366f1';
 
   const [showWriteOff, setShowWriteOff] = useState(false);
   const [search, setSearch] = useState('');
@@ -141,153 +140,183 @@ export default function DebtorsPage() {
       <div className="space-y-5">
         {/* Summary */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4">
-            <p className="text-sm text-gray-500 flex items-center gap-1.5"><Users size={14} /> طلاب عليهم مبالغ</p>
-            <p className="text-2xl font-bold text-gray-900">{totals.count}</p>
+          <div className="glow-card relative p-5 rounded-2xl bg-white/95 dark:bg-[#0c1324]/90 backdrop-blur-xl border border-slate-200/80 dark:border-white/10 shadow-sm overflow-hidden">
+            <div className="absolute top-0 inset-x-0 h-[2px] bg-gradient-to-r from-transparent via-cyan-400/50 to-transparent pointer-events-none" />
+            <div className="flex items-center gap-3 mb-2">
+              <div className="p-2.5 rounded-xl bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 border border-cyan-500/20">
+                <Users size={16} />
+              </div>
+              <p className="text-xs font-bold text-slate-500 dark:text-slate-400">طلاب عليهم مبالغ</p>
+            </div>
+            <p className="text-3xl font-black text-slate-900 dark:text-white font-mono mt-2">{totals.count}</p>
           </div>
-          <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4">
-            <p className="text-sm text-gray-500 flex items-center gap-1.5"><DollarSign size={14} /> إجمالي المتبقي</p>
-            <p className="text-2xl font-bold text-red-600">{formatCurrency(totals.remaining, settings?.currency)}</p>
+
+          <div className="glow-card relative p-5 rounded-2xl bg-white/95 dark:bg-[#0c1324]/90 backdrop-blur-xl border border-slate-200/80 dark:border-white/10 shadow-sm overflow-hidden">
+            <div className="absolute top-0 inset-x-0 h-[2px] bg-gradient-to-r from-transparent via-rose-400/50 to-transparent pointer-events-none" />
+            <div className="flex items-center gap-3 mb-2">
+              <div className="p-2.5 rounded-xl bg-rose-500/10 text-rose-600 dark:text-rose-400 border border-rose-500/20">
+                <DollarSign size={16} />
+              </div>
+              <p className="text-xs font-bold text-slate-500 dark:text-slate-400">إجمالي المتبقي</p>
+            </div>
+            <p className="text-3xl font-black text-rose-600 dark:text-rose-400 font-mono mt-2">{formatCurrency(totals.remaining, settings?.currency)}</p>
           </div>
-          <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4">
-            <p className="text-sm text-gray-500 flex items-center gap-1.5"><AlertTriangle size={14} /> متأخرات</p>
-            <p className="text-2xl font-bold text-orange-500">{totals.overdueCount}</p>
-            <p className="text-xs text-gray-400 mt-1">{formatCurrency(totals.overdueAmount, settings?.currency)}</p>
+
+          <div className="glow-card relative p-5 rounded-2xl bg-white/95 dark:bg-[#0c1324]/90 backdrop-blur-xl border border-slate-200/80 dark:border-white/10 shadow-sm overflow-hidden">
+            <div className="absolute top-0 inset-x-0 h-[2px] bg-gradient-to-r from-transparent via-amber-400/50 to-transparent pointer-events-none" />
+            <div className="flex items-center gap-3 mb-2">
+              <div className="p-2.5 rounded-xl bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20">
+                <AlertTriangle size={16} />
+              </div>
+              <p className="text-xs font-bold text-slate-500 dark:text-slate-400">متأخرات</p>
+            </div>
+            <div className="flex items-baseline gap-2 mt-2">
+              <p className="text-3xl font-black text-amber-600 dark:text-amber-400 font-mono">{totals.overdueCount}</p>
+              <p className="text-xs font-mono text-slate-400 dark:text-slate-500">({formatCurrency(totals.overdueAmount, settings?.currency)})</p>
+            </div>
           </div>
-          <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4">
-            <p className="text-sm text-gray-500 flex items-center gap-1.5"><Clock size={14} /> لم يدفعوا بعد</p>
-            <p className="text-2xl font-bold text-gray-900">{totals.neverPaid}</p>
+
+          <div className="glow-card relative p-5 rounded-2xl bg-white/95 dark:bg-[#0c1324]/90 backdrop-blur-xl border border-slate-200/80 dark:border-white/10 shadow-sm overflow-hidden">
+            <div className="absolute top-0 inset-x-0 h-[2px] bg-gradient-to-r from-transparent via-indigo-400/50 to-transparent pointer-events-none" />
+            <div className="flex items-center gap-3 mb-2">
+              <div className="p-2.5 rounded-xl bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 border border-indigo-500/20">
+                <Clock size={16} />
+              </div>
+              <p className="text-xs font-bold text-slate-500 dark:text-slate-400">لم يدفعوا بعد</p>
+            </div>
+            <p className="text-3xl font-black text-slate-900 dark:text-white font-mono mt-2">{totals.neverPaid}</p>
           </div>
         </div>
 
         {/* Toolbar */}
-        <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4">
-          <div className="flex flex-wrap items-center gap-3">
-            <div className="flex-1 min-w-48 relative">
-              <Search size={16} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400" />
-              <input type="text" value={search} onChange={e => setSearch(e.target.value)}
-                placeholder="بحث بالاسم أو هاتف ولي الأمر..."
-                className="w-full pr-9 pl-3 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500" />
-            </div>
-
-            <div className="flex flex-wrap gap-1 bg-gray-50 rounded-xl p-1">
-              {FILTERS.map(f => (
-                <button key={f.key} onClick={() => setFilter(f.key)}
-                  className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${filter === f.key ? 'text-white' : 'text-gray-600 hover:bg-gray-100'
-                    }`}
-                  style={filter === f.key ? { backgroundColor: primaryColor, color: getContrastColor(primaryColor) } : {}}>
-                  {f.label} ({f.count})
-                </button>
-              ))}
-            </div>
-
-            <select value={sort} onChange={e => setSort(e.target.value as SortKey)}
-              className="px-3 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none bg-white">
-              <option value="remaining">الترتيب: الأكبر متبقياً</option>
-              <option value="overdue">الترتيب: الأكبر متأخرات</option>
-              <option value="oldestPayment">الترتيب: الأقدم دفعة</option>
-              <option value="name">الترتيب: بالاسم</option>
-            </select>
-
-            <button onClick={exportCSV}
-              className="flex items-center gap-2 px-3 py-2.5 border border-gray-200 rounded-xl text-sm text-gray-700 hover:bg-gray-50">
-              <Download size={16} /> تصدير
-            </button>
-
-            {canWriteOff && (
-              <button onClick={() => setShowWriteOff(true)}
-                className="flex items-center gap-2 px-3 py-2.5 border border-red-200 rounded-xl text-sm text-red-600 hover:bg-red-50"
-                title="إبراء ذمة: تصفير الأقساط غير المسددة قبل بداية شهر جديد">
-                <Eraser size={16} /> تصفير المديونيات
-              </button>
-            )}
+        <div className="glass-panel rounded-2xl p-4 sm:p-5 relative border border-slate-200/80 dark:border-white/10 shadow-sm flex flex-wrap items-center gap-3">
+          <div className="absolute top-0 inset-x-0 h-[1px] bg-gradient-to-r from-transparent via-cyan-400/40 to-transparent pointer-events-none" />
+          <div className="flex-1 min-w-48 relative">
+            <Search size={16} className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500 pointer-events-none" />
+            <input type="text" value={search} onChange={e => setSearch(e.target.value)}
+              placeholder="بحث بالاسم أو هاتف ولي الأمر..."
+              className="w-full pr-10 pl-3.5 py-2.5 border border-slate-200 dark:border-white/10 rounded-xl text-sm bg-white/80 dark:bg-[#070b14]/90 text-slate-800 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-cyan-500/30 focus:border-cyan-400" />
           </div>
+
+          <div className="flex flex-wrap gap-1 bg-slate-100/80 dark:bg-[#070b14]/80 border border-slate-200/80 dark:border-white/10 rounded-xl p-1">
+            {FILTERS.map(f => (
+              <button key={f.key} onClick={() => setFilter(f.key)}
+                className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                  filter === f.key
+                    ? 'bg-gradient-to-r from-cyan-600 to-indigo-600 text-white shadow-md shadow-cyan-500/25'
+                    : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200'
+                }`}>
+                {f.label} ({f.count})
+              </button>
+            ))}
+          </div>
+
+          <select value={sort} onChange={e => setSort(e.target.value as SortKey)}
+            className="px-3.5 py-2.5 border border-slate-200 dark:border-white/10 rounded-xl text-sm bg-white/80 dark:bg-[#070b14]/90 text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-cyan-500/30 focus:border-cyan-400 cursor-pointer">
+            <option value="remaining">الترتيب: الأكبر متبقياً</option>
+            <option value="overdue">الترتيب: الأكبر متأخرات</option>
+            <option value="oldestPayment">الترتيب: الأقدم دفعة</option>
+            <option value="name">الترتيب: بالاسم</option>
+          </select>
+
+          <button onClick={exportCSV}
+            className="flex items-center gap-2 px-4 py-2.5 border border-slate-200 dark:border-white/10 rounded-xl text-sm font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-100/50 dark:hover:bg-white/5 transition-all cursor-pointer">
+            <Download size={16} /> تصدير
+          </button>
+
+          {canWriteOff && (
+            <button onClick={() => setShowWriteOff(true)}
+              className="flex items-center gap-2 px-4 py-2.5 border border-rose-500/20 bg-rose-500/10 rounded-xl text-sm font-bold text-rose-600 dark:text-rose-400 hover:bg-rose-500/20 transition-all cursor-pointer"
+              title="إبراء ذمة: تصفير الأقساط غير المسددة قبل بداية شهر جديد">
+              <Eraser size={16} /> تصفير المديونيات
+            </button>
+          )}
         </div>
 
         {/* Table */}
-        <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+        <div className="glass-panel rounded-2xl border border-slate-200/80 dark:border-white/10 shadow-sm overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full">
-              <thead className="bg-gray-50">
+              <thead className="bg-slate-50/80 dark:bg-[#070b14]/80 border-b border-slate-200/80 dark:border-white/10">
                 <tr>
-                  <th className="p-4 text-right text-xs font-semibold text-gray-600 uppercase">الطالب</th>
-                  <th className="p-4 text-right text-xs font-semibold text-gray-600 uppercase">المجموعات</th>
-                  <th className="p-4 text-right text-xs font-semibold text-gray-600 uppercase">المطلوب</th>
-                  <th className="p-4 text-right text-xs font-semibold text-gray-600 uppercase">المدفوع</th>
-                  <th className="p-4 text-right text-xs font-semibold text-gray-600 uppercase">المتبقي</th>
-                  <th className="p-4 text-right text-xs font-semibold text-gray-600 uppercase">التأخير</th>
-                  <th className="p-4 text-right text-xs font-semibold text-gray-600 uppercase">آخر دفعة</th>
-                  <th className="p-4 text-center text-xs font-semibold text-gray-600 uppercase">إجراءات</th>
+                  <th className="p-4 text-right text-xs font-bold text-slate-500 dark:text-slate-400">الطالب</th>
+                  <th className="p-4 text-right text-xs font-bold text-slate-500 dark:text-slate-400">المجموعات</th>
+                  <th className="p-4 text-right text-xs font-bold text-slate-500 dark:text-slate-400">المطلوب</th>
+                  <th className="p-4 text-right text-xs font-bold text-slate-500 dark:text-slate-400">المدفوع</th>
+                  <th className="p-4 text-right text-xs font-bold text-slate-500 dark:text-slate-400">المتبقي</th>
+                  <th className="p-4 text-right text-xs font-bold text-slate-500 dark:text-slate-400">التأخير</th>
+                  <th className="p-4 text-right text-xs font-bold text-slate-500 dark:text-slate-400">آخر دفعة</th>
+                  <th className="p-4 text-center text-xs font-bold text-slate-500 dark:text-slate-400">إجراءات</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-50">
+              <tbody className="divide-y divide-slate-100 dark:divide-white/5">
                 {loading ? (
-                  <tr><td colSpan={8} className="p-8 text-center">
-                    <div className="animate-spin w-6 h-6 border-4 border-indigo-500 border-t-transparent rounded-full mx-auto" />
+                  <tr><td colSpan={8} className="p-12 text-center">
+                    <div className="animate-spin w-8 h-8 border-4 border-cyan-500 border-t-transparent rounded-full mx-auto" />
                   </td></tr>
                 ) : rows.length === 0 ? (
-                  <tr><td colSpan={8} className="p-8 text-center text-gray-400">
+                  <tr><td colSpan={8} className="p-12 text-center text-slate-400">
                     {debtors.length === 0 ? '🎉 لا توجد مديونيات — كل الطلاب مسددين' : 'لا نتائج مطابقة للفلتر'}
                   </td></tr>
                 ) : rows.map(d => (
-                  <tr key={d.studentId} className={`hover:bg-gray-50 transition-colors ${d.overdueCount > 0 ? 'bg-red-50/40' : ''}`}>
+                  <tr key={d.studentId} className={`hover:bg-slate-50/50 dark:hover:bg-white/[0.02] transition-colors ${d.overdueCount > 0 ? 'bg-rose-500/[0.04]' : ''}`}>
                     <td className="p-4">
-                      <button onClick={() => navigate(`/students/${d.studentId}`)} className="text-right group">
-                        <p className="text-sm font-semibold text-gray-900 group-hover:text-indigo-600">{d.name}</p>
-                        <p className="text-xs text-gray-500">{d.parentPhone}</p>
+                      <button onClick={() => navigate(`/students/${d.studentId}`)} className="text-right group cursor-pointer">
+                        <p className="text-sm font-bold text-slate-900 dark:text-white group-hover:text-cyan-400 transition-colors">{d.name}</p>
+                        <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5" dir="ltr">{d.parentPhone}</p>
                       </button>
                       {d.status === 'suspended' && (
-                        <span className="inline-block mt-1 text-xs bg-yellow-100 text-yellow-800 px-2 py-0.5 rounded-full">متوقف</span>
+                        <span className="inline-block mt-1 text-[10px] font-bold bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20 px-2 py-0.5 rounded-full">متوقف</span>
                       )}
                     </td>
-                    <td className="p-4 text-xs text-gray-600 max-w-[220px]">
+                    <td className="p-4 text-xs text-slate-600 dark:text-slate-300 max-w-[220px]">
                       {d.groups.map(g => (
                         <div key={g.groupId} className="truncate">
-                          {g.groupName}
-                          <span className="text-gray-400"> • {formatCurrency(g.remaining, settings?.currency)}</span>
+                          <span className="font-semibold">{g.groupName}</span>
+                          <span className="text-slate-400 font-mono"> • {formatCurrency(g.remaining, settings?.currency)}</span>
                         </div>
                       ))}
                     </td>
-                    <td className="p-4 text-sm text-gray-700">{formatCurrency(d.owed, settings?.currency)}</td>
-                    <td className="p-4 text-sm text-green-600">{formatCurrency(d.paid, settings?.currency)}</td>
-                    <td className="p-4 text-sm font-bold text-red-600">{formatCurrency(d.remaining, settings?.currency)}</td>
+                    <td className="p-4 text-sm font-mono text-slate-700 dark:text-slate-300">{formatCurrency(d.owed, settings?.currency)}</td>
+                    <td className="p-4 text-sm font-mono text-emerald-600 dark:text-emerald-400 font-bold">{formatCurrency(d.paid, settings?.currency)}</td>
+                    <td className="p-4 text-sm font-mono font-bold text-rose-600 dark:text-rose-400">{formatCurrency(d.remaining, settings?.currency)}</td>
                     <td className="p-4">
                       {d.overdueCount > 0 ? (
-                        <span className="inline-flex items-center gap-1 text-xs font-medium px-2 py-1 rounded-full bg-red-50 text-red-600">
+                        <span className="inline-flex items-center gap-1 text-xs font-bold px-2.5 py-1 rounded-full bg-rose-500/10 text-rose-600 dark:text-rose-400 border border-rose-500/20">
                           <AlertTriangle size={12} /> متأخر {formatCurrency(d.overdueAmount, settings?.currency)}
                         </span>
                       ) : (
-                        <span className="text-xs text-gray-400">—</span>
+                        <span className="text-xs text-slate-400">—</span>
                       )}
                     </td>
-                    <td className="p-4 text-xs text-gray-500">
+                    <td className="p-4 text-xs text-slate-500 dark:text-slate-400">
                       {d.lastPaymentDate ? (
                         <>
-                          {formatDate(d.lastPaymentDate)}
-                          <span className="block text-gray-400">من {d.daysSinceLastPayment} يوم</span>
+                          <span className="font-mono">{formatDate(d.lastPaymentDate)}</span>
+                          <span className="block text-slate-400 text-[11px] mt-0.5">من {d.daysSinceLastPayment} يوم</span>
                         </>
                       ) : (
-                        <span className="inline-flex items-center gap-1 text-orange-600 font-medium">
+                        <span className="inline-flex items-center gap-1 text-amber-600 dark:text-amber-400 font-bold">
                           <TrendingDown size={12} /> لم يدفع بعد
                         </span>
                       )}
                     </td>
                     <td className="p-4">
-                      <div className="flex items-center justify-center gap-1">
+                      <div className="flex items-center justify-center gap-1.5">
                         {canCollect && (
                           <button onClick={() => openPay(d)}
-                            className="p-1.5 rounded-lg hover:bg-green-50 text-green-600 transition-colors" title="تحصيل دفعة">
+                            className="p-2 rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 hover:bg-emerald-500/20 transition-all hover:scale-105 active:scale-95 cursor-pointer" title="تحصيل دفعة">
                             <Receipt size={15} />
                           </button>
                         )}
                         {d.parentPhone && (
                           <a href={getWhatsAppLink(d.parentPhone, reminderText(d))} target="_blank" rel="noopener noreferrer"
-                            className="p-1.5 rounded-lg hover:bg-green-50 text-green-600 transition-colors" title="تذكير عبر واتساب">
+                            className="p-2 rounded-xl bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 border border-cyan-500/20 hover:bg-cyan-500/20 transition-all hover:scale-105 active:scale-95" title="تذكير عبر واتساب">
                             <MessageCircle size={15} />
                           </a>
                         )}
                         <button onClick={() => navigate(`/students/${d.studentId}`)}
-                          className="p-1.5 rounded-lg hover:bg-indigo-50 text-indigo-600 transition-colors" title="ملف الطالب">
+                          className="p-2 rounded-xl bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 border border-indigo-500/20 hover:bg-indigo-500/20 transition-all hover:scale-105 active:scale-95 cursor-pointer" title="ملف الطالب">
                           <Eye size={15} />
                         </button>
                       </div>
